@@ -1,0 +1,24 @@
+# Virtual Card Maker - SEO Directives
+# Allow all search engines to crawl the site
+
+User-agent: *
+Allow: /
+Disallow: /temp/
+Disallow: /*.json$
+Disallow: /*?*
+
+# Specific directives for major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Crawl delay in seconds
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://lian0123.github.io/virtual-card-project/sitemap.xml

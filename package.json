@@ -1,0 +1,18 @@
+{
+  "name": "virtual-business-card-project",
+  "version": "1.0.0",
+  "description": "A personalized business card maker web application",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "serve": "http-server"
+  },
+  "keywords": [
+    "business card",
+    "card maker",
+    "react",
+    "web app"
+  ],
+  "author": "",
+  "license": "MIT"
+}
