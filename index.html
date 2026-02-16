@@ -505,6 +505,66 @@
             align-items: center;
         }
 
+        .qr-name {
+            font-size: 20px;
+            margin-bottom: 3px;
+            line-height: 1.2;
+        }
+
+        .qr-role {
+            font-size: 12px;
+            margin-bottom: 4px;
+            line-height: 1.25;
+        }
+
+        .qr-intro {
+            font-size: 11px;
+            margin-bottom: 6px;
+            line-height: 1.35;
+        }
+
+        .qr-contact-list {
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        .qr-contact-item {
+            margin-bottom: 1px;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .qr-social-list {
+            margin-top: 3px;
+        }
+
+        .qr-social-icon {
+            margin-right: 4px;
+            font-size: 12px;
+        }
+
+        .qr-code-box {
+            width: 150px;
+            height: 150px;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .qr-code-box canvas,
+        .qr-code-box img {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+
+        .qr-scan-text {
+            font-size: 11px;
+            line-height: 1.2;
+            margin: 0;
+        }
+
         .custom-card-wrapper {
             width: 100%;
             height: 100%;
@@ -941,6 +1001,167 @@
                 min-height: 188px;
                 margin: 0;
                 order: 2;
+                overflow: hidden;
+            }
+
+            .main-card-wrapper {
+                overflow: hidden;
+            }
+
+            .main-card-left {
+                width: 90px;
+                padding: 12px;
+            }
+
+            .main-card-right {
+                padding: 12px;
+                font-size: 11px;
+            }
+
+            .main-card-right h2 {
+                font-size: 14px;
+                margin-bottom: 2px !important;
+                word-break: break-word;
+                line-height: 1.2;
+            }
+
+            .main-card-right p {
+                font-size: 9px;
+                margin-bottom: 1px !important;
+                word-break: break-word;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                line-clamp: 1;
+                -webkit-box-orient: vertical;
+            }
+
+            .card-avatar {
+                width: 70px;
+                height: 70px;
+            }
+
+            .qr-card-wrapper {
+                padding: 12px;
+                flex-direction: column;
+                gap: 8px;
+                overflow: hidden;
+                align-items: stretch;
+                justify-content: flex-start;
+                max-width: 320px;
+            }
+
+            .qr-card-wrapper {
+                padding: 12px;
+                flex-direction: column;
+                gap: 8px;
+                overflow: hidden;
+                align-items: stretch;
+                justify-content: flex-start;
+                max-width: 320px;
+            }
+
+            .qr-card-left {
+                flex: 0;
+                min-width: 0;
+                overflow: hidden;
+                width: 100%;
+            }
+
+            /* 强制所有元素的 font-size */
+            .qr-card-left h2 {
+                font-size: 13px !important;
+                margin-bottom: 2px !important;
+                word-break: break-word !important;
+                line-height: 1.2 !important;
+            }
+
+            .qr-card-left > p {
+                font-size: 9px !important;
+                margin-bottom: 2px !important;
+                word-break: break-word !important;
+                line-height: 1.2 !important;
+            }
+
+            /* 联系信息容器 - 最重要的覆盖 */
+            .qr-card-left > div[style*="fontSize"] {
+                font-size: 8px !important;
+            }
+
+            .qr-card-left > div[style*="fontSize"] p {
+                font-size: 8px !important;
+                margin-bottom: 1px !important;
+                word-break: break-word !important;
+                line-height: 1.2 !important;
+            }
+
+            .qr-card-left > div[style*="fontSize"] span {
+                font-size: 8px !important;
+                word-break: break-word !important;
+            }
+
+            /* 备用通配符选择器 */
+            .qr-card-left > div > p {
+                font-size: 8px !important;
+                margin-bottom: 1px !important;
+                word-break: break-word !important;
+            }
+
+            .qr-card-left > div > span {
+                font-size: 8px !important;
+            }
+
+            /* 所有文本元素启用换行 */
+            .qr-card-left * {
+                word-break: break-word !important;
+                overflow-wrap: break-word !important;
+                white-space: normal !important;
+            }
+
+            .qr-card-right {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+            #qr-code {
+                width: 120px !important;
+                height: 120px !important;
+                padding: 8px !important;
+                flex-shrink: 0 !important;
+                margin-bottom: 6px !important;
+            }
+
+            .qr-card-right p {
+                font-size: 8px !important;
+                margin: 0 !important;
+                word-break: break-word !important;
+                line-height: 1.2 !important;
+            }
+
+            /* 绝对覆盖所有可能的 inline style font-size */
+            .qr-card-left h2[style*="fontSize"] {
+                font-size: 13px !important;
+            }
+
+            .qr-card-left p[style*="fontSize"] {
+                font-size: 9px !important;
+            }
+
+            .qr-card-left > div[style*="fontSize"] {
+                font-size: 8px !important;
+            }
+
+            #qr-code[style*="padding"] {
+                padding: 8px !important;
+            }
+
+            .qr-card-right p[style*="fontSize"] {
+                font-size: 8px !important;
             }
 
             .preview-container {
@@ -1019,6 +1240,180 @@
                 aspect-ratio: 16 / 10;
                 min-height: 175px;
                 margin: 0;
+                overflow: hidden;
+            }
+
+            .main-card-left {
+                width: 80px;
+                padding: 10px;
+            }
+
+            .main-card-right {
+                padding: 10px;
+                font-size: 10px;
+            }
+
+            .main-card-right h2 {
+                font-size: 12px;
+                margin-bottom: 2px !important;
+                word-break: break-word;
+                line-height: 1.1;
+            }
+
+            .main-card-right p {
+                font-size: 8px;
+                margin-bottom: 1px !important;
+                word-break: break-word;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                line-clamp: 1;
+                -webkit-box-orient: vertical;
+            }
+
+            .card-avatar {
+                width: 60px;
+                height: 60px;
+            }
+
+            .qr-card-wrapper {
+                padding: 10px;
+                flex-direction: column;
+                gap: 6px;
+                overflow: hidden;
+                align-items: stretch;
+                justify-content: flex-start;
+                max-width: 300px;
+            }
+
+            .qr-card-left {
+                flex: 0;
+                min-width: 0;
+                overflow: hidden;
+                width: 100%;
+            }
+
+            /* 强制所有元素的 font-size */
+            .qr-card-left h2 {
+                font-size: 12px !important;
+                margin-bottom: 2px !important;
+                word-break: break-word !important;
+                line-height: 1.2 !important;
+            }
+
+            .qr-card-left > p {
+                font-size: 8px !important;
+                margin-bottom: 2px !important;
+                word-break: break-word !important;
+                line-height: 1.2 !important;
+            }
+
+            /* 联系信息容器 - 最重要的覆盖 */
+            .qr-card-left > div[style*="fontSize"] {
+                font-size: 7px !important;
+            }
+
+            .qr-card-left > div[style*="fontSize"] p {
+                font-size: 7px !important;
+                margin-bottom: 1px !important;
+                word-break: break-word !important;
+                line-height: 1.2 !important;
+            }
+
+            .qr-card-left > div[style*="fontSize"] span {
+                font-size: 7px !important;
+                word-break: break-word !important;
+            }
+
+            /* 备用通配符选择器 */
+            .qr-card-left > div > p {
+                font-size: 7px !important;
+                margin-bottom: 1px !important;
+                word-break: break-word !important;
+            }
+
+            .qr-card-left > div > span {
+                font-size: 7px !important;
+            }
+
+            /* 所有文本元素启用换行 */
+            .qr-card-left * {
+                word-break: break-word !important;
+                overflow-wrap: break-word !important;
+                white-space: normal !important;
+            }
+
+            .qr-card-right {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+            #qr-code {
+                width: 100px !important;
+                height: 100px !important;
+                padding: 6px !important;
+                flex-shrink: 0 !important;
+                margin-bottom: 4px !important;
+            }
+
+            .qr-card-right p {
+                font-size: 7px !important;
+                margin: 0 !important;
+                word-break: break-word !important;
+                line-height: 1.2 !important;
+            }
+
+            .qr-card-left h2 {
+                font-size: 12px !important;
+                margin-bottom: 2px !important;
+                word-break: break-word !important;
+            }
+
+            .qr-card-left > p {
+                font-size: 8px !important;
+                margin-bottom: 1px !important;
+                overflow: hidden !important;
+                word-break: break-word !important;
+                line-height: 1.2 !important;
+            }
+
+            #qr-code {
+                width: 100px !important;
+                height: 100px !important;
+                padding: 6px !important;
+                flex-shrink: 0 !important;
+            }
+
+            .qr-card-right p {
+                font-size: 7px !important;
+                margin: 3px 0 0 0 !important;
+                word-break: break-word !important;
+            }
+
+            /* 绝对覆盖所有可能的 inline style font-size (480px) */
+            .qr-card-left h2[style*="fontSize"] {
+                font-size: 12px !important;
+            }
+
+            .qr-card-left p[style*="fontSize"] {
+                font-size: 8px !important;
+            }
+
+            .qr-card-left > div[style*="fontSize"] {
+                font-size: 7px !important;
+            }
+
+            #qr-code[style*="padding"] {
+                padding: 6px !important;
+            }
+
+            .qr-card-right p[style*="fontSize"] {
+                font-size: 7px !important;
             }
 
             .preview-container {
@@ -1059,6 +1454,143 @@
 
             h1 {
                 font-size: 18px !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .qr-card-wrapper {
+                flex-direction: row !important;
+                align-items: stretch !important;
+                justify-content: space-between !important;
+                padding: 10px !important;
+                gap: 8px !important;
+                max-width: 100% !important;
+            }
+
+            .qr-card-left {
+                flex: 1 1 auto !important;
+                min-width: 0 !important;
+                overflow: hidden !important;
+            }
+
+            .qr-card-right {
+                flex: 0 0 auto !important;
+                width: auto !important;
+                justify-content: center !important;
+            }
+
+            .qr-name {
+                font-size: 14px !important;
+                margin-bottom: 2px !important;
+            }
+
+            .qr-role {
+                font-size: 10px !important;
+                margin-bottom: 3px !important;
+            }
+
+            .qr-intro {
+                font-size: 9px !important;
+                margin-bottom: 4px !important;
+                line-height: 1.25 !important;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .qr-contact-list {
+                font-size: 8px !important;
+                line-height: 1.25 !important;
+            }
+
+            .qr-contact-item {
+                margin-bottom: 1px !important;
+                line-height: 1.2 !important;
+            }
+
+            .qr-social-icon {
+                font-size: 10px !important;
+            }
+
+            .qr-code-box {
+                width: 96px !important;
+                height: 96px !important;
+                padding: 6px !important;
+                margin-bottom: 4px !important;
+            }
+
+            #qr-code {
+                width: 96px !important;
+                height: 96px !important;
+                padding: 6px !important;
+                margin-bottom: 4px !important;
+            }
+
+            .qr-scan-text {
+                font-size: 8px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .qr-card-wrapper {
+                flex-direction: row !important;
+                align-items: stretch !important;
+                justify-content: space-between !important;
+                padding: 8px !important;
+                gap: 6px !important;
+                max-width: 100% !important;
+            }
+
+            .qr-card-left {
+                flex: 1 1 auto !important;
+                min-width: 0 !important;
+                overflow: hidden !important;
+            }
+
+            .qr-card-right {
+                flex: 0 0 auto !important;
+                width: auto !important;
+                justify-content: center !important;
+            }
+
+            .qr-name {
+                font-size: 12px !important;
+            }
+
+            .qr-role {
+                font-size: 9px !important;
+            }
+
+            .qr-intro {
+                font-size: 8px !important;
+            }
+
+            .qr-contact-list {
+                font-size: 7px !important;
+            }
+
+            .qr-social-icon {
+                font-size: 9px !important;
+            }
+
+            .qr-code-box {
+                width: 78px !important;
+                height: 78px !important;
+                padding: 5px !important;
+                margin-bottom: 3px !important;
+            }
+
+            #qr-code {
+                width: 78px !important;
+                height: 78px !important;
+                padding: 5px !important;
+                margin-bottom: 3px !important;
+            }
+
+            .qr-scan-text {
+                font-size: 7px !important;
             }
         }
     </style>
@@ -3940,11 +4472,12 @@ END:VCARD`;
                     if (qrContainer) {
                         qrContainer.innerHTML = '';
                         let qrText = qrContent || `${cardData.name}|${cardData.email}|${cardData.phone}`;
+                        const qrSize = window.innerWidth <= 480 ? 78 : window.innerWidth <= 768 ? 96 : 150;
                         try {
                             new QRCode(qrContainer, {
                                 text: qrText,
-                                width: 150,
-                                height: 150,
+                                width: qrSize,
+                                height: qrSize,
                                 colorDark: '#333',
                                 colorLight: '#fff'
                             });
@@ -4147,10 +4680,10 @@ END:VCARD`;
                             {cardType === 'qr' && (
                                 <div className="qr-card-wrapper" style={{ position: 'relative', zIndex: 2 }}>
                                     <div className="qr-card-left">
-                                        <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '3px', color: '#1a1a1a' }}>
+                                        <h2 className="qr-name" style={{ fontWeight: 'bold', color: '#1a1a1a' }}>
                                             {cardData.name}
                                         </h2>
-                                        <p style={{ fontSize: '12px', color: '#667eea', marginBottom: '4px', fontWeight: '600' }}>
+                                        <p className="qr-role" style={{ color: '#667eea', fontWeight: '600' }}>
                                             {cardData.title}{cardData.company ? ` @ ${cardData.company}` : ''}
                                         </p>
                                         {cardData.decorativeElements && cardData.decorativeElements.map((elemKey, idx) => {
@@ -4166,19 +4699,19 @@ END:VCARD`;
                                             );
                                         })}
                                         {cardData.intro && (
-                                            <p style={{ fontSize: '11px', color: '#666', marginBottom: '6px', lineHeight: '1.4' }}>
+                                            <p className="qr-intro" style={{ color: '#666' }}>
                                                 {cardData.intro}
                                             </p>
                                         )}
-                                        <div style={{ fontSize: '10px', color: '#666', lineHeight: '1.6' }}>
-                                            <p>📍 {cardData.country}{cardData.address ? ` · ${cardData.address}` : ''}</p>
-                                            <p>📧 {cardData.email}</p>
-                                            <p>📱 {cardData.phone}</p>
-                                            {cardData.website && <p>🌐 {cardData.website}</p>}
+                                        <div className="qr-contact-list" style={{ color: '#666' }}>
+                                            <p className="qr-contact-item">📍 {cardData.country}{cardData.address ? ` · ${cardData.address}` : ''}</p>
+                                            <p className="qr-contact-item">📧 {cardData.email}</p>
+                                            <p className="qr-contact-item">📱 {cardData.phone}</p>
+                                            {cardData.website && <p className="qr-contact-item">🌐 {cardData.website}</p>}
                                             {Object.entries(cardData.socialLinks || {}).filter(([_, url]) => url).length > 0 && (
-                                                <div style={{ marginTop: '3px' }}>
+                                                <div className="qr-social-list">
                                                     {Object.entries(cardData.socialLinks).filter(([_, url]) => url).map(([key, url]) => (
-                                                        <span key={key} style={{ marginRight: '4px', fontSize: '12px' }} title={SOCIAL_MEDIA[key]?.name}>{SOCIAL_MEDIA[key]?.icon}</span>
+                                                        <span key={key} className="qr-social-icon" title={SOCIAL_MEDIA[key]?.name}>{SOCIAL_MEDIA[key]?.icon}</span>
                                                     ))}
                                                 </div>
                                             )}
@@ -4191,8 +4724,8 @@ END:VCARD`;
                                     </div>
 
                                     <div className="qr-card-right">
-                                        <div id="qr-code" style={{ marginBottom: '10px', backgroundColor: '#fff', padding: '10px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}></div>
-                                        <p style={{ fontSize: '11px', color: '#999', textAlign: 'center' }}>{t.scanToContact}</p>
+                                        <div id="qr-code" className="qr-code-box" style={{ backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}></div>
+                                        <p className="qr-scan-text" style={{ color: '#999', textAlign: 'center' }}>{t.scanToContact}</p>
                                     </div>
                                 </div>
                             )}
