@@ -1,13 +1,16 @@
 {
   "name": "數位名片製作 - 線上免費工具",
   "short_name": "數位名片",
+  "id": "./",
   "description": "快速創建專業的電子名片和數位明信片，支援PNG、JPG、WebP、HTML和vCard格式匯出。無需設計經驗，即可製作高質感的數位名片。",
-  "start_url": "/virtual-card-project/",
-  "scope": "/virtual-card-project/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "theme_color": "#667eea",
   "background_color": "#ffffff",
   "orientation": "portrait-primary",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><defs><linearGradient id='grad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%23667eea;stop-opacity:1' /><stop offset='100%' style='stop-color:%23764ba2;stop-opacity:1' /></linearGradient></defs><rect width='192' height='192' fill='url(%23grad)' rx='45'/><text x='96' y='140' font-size='100' font-weight='bold' text-anchor='middle' fill='%23fff' font-family='system-ui'>📇</text></svg>",
@@ -48,7 +51,7 @@
       "name": "新增名片",
       "short_name": "新增",
       "description": "快速新增一張新的名片",
-      "url": "/virtual-card-project/?action=new",
+      "url": "./?action=new",
       "icons": [
         {
           "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text x='48' y='70' font-size='60' text-anchor='middle'>➕</text></svg>",
@@ -59,7 +62,7 @@
     }
   ],
   "share_target": {
-    "action": "/virtual-card-project/",
+    "action": "./",
     "method": "POST",
     "enctype": "application/x-www-form-urlencoded",
     "params": {

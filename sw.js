@@ -1,9 +1,10 @@
 // Virtual Card Maker Service Worker
-const CACHE_NAME = 'virtual-card-maker-v1';
+const CACHE_NAME = 'virtual-card-maker-v3';
 const ASSETS_TO_CACHE = [
-  '/virtual-card-project/',
-  '/virtual-card-project/index.html',
-  '/virtual-card-project/manifest.json',
+  './',
+  './index.html',
+  './manifest.json',
+  './skill.json',
   'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css',
   'https://unpkg.com/react@18/umd/react.production.min.js',
   'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js',
@@ -22,9 +23,10 @@ self.addEventListener('install', (event) => {
       .then((cache) => {
         // Only cache local assets, external CDN resources may fail
         return cache.addAll([
-          '/virtual-card-project/',
-          '/virtual-card-project/index.html',
-          '/virtual-card-project/manifest.json'
+          './',
+          './index.html',
+          './manifest.json',
+          './skill.json'
         ]).catch(err => console.log('[Service Worker] Cache add error:', err));
       })
       .then(() => self.skipWaiting())
@@ -74,7 +76,7 @@ self.addEventListener('fetch', (event) => {
         })
         .catch(() => {
           return caches.match(request)
-            .then((response) => response || caches.match('/virtual-card-project/index.html'));
+            .then((response) => response || caches.match('./index.html'));
         })
     );
     return;

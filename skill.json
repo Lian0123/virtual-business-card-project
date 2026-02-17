@@ -1,0 +1,25 @@
+{
+  "name": "virtual-card-skill",
+  "version": "1.0.0",
+  "description": "Remote AI skill bridge for Virtual Card Maker via window API and postMessage.",
+  "runtime": "browser",
+  "entry": "window.VirtualCardSkill",
+  "transport": {
+    "type": "postMessage",
+    "requestType": "VIRTUAL_CARD_SKILL",
+    "responseType": "VIRTUAL_CARD_SKILL_RESULT"
+  },
+  "actions": [
+    { "name": "getState", "args": {} },
+    { "name": "setCardType", "args": { "cardType": "main|qr|custom" } },
+    { "name": "setLanguage", "args": { "lang": "zh|en|ja|th|ko" } },
+    { "name": "setThemeMode", "args": { "theme": "light|dark" } },
+    { "name": "updateField", "args": { "field": "string", "value": "any" } },
+    { "name": "setQrContent", "args": { "value": "string" } },
+    { "name": "applyTemplate", "args": { "templateName": "string" } },
+    { "name": "addTextSticker", "args": {} },
+    { "name": "addImageSticker", "args": { "imageUrl": "string" } },
+    { "name": "updateSticker", "args": { "id": "number", "updates": "object" } },
+    { "name": "removeSticker", "args": { "id": "number" } }
+  ]
+}
