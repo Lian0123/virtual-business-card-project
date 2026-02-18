@@ -2,6 +2,17 @@
 
 一個功能完整的個人化名片製作工具，可在 GitHub Pages 上使用。
 
+## Project Demo
+- 主畫面: 
+  - https://lian0123.github.io/virtual-business-card-project/
+- WebMCP: 
+  - https://lian0123.github.io/virtual-business-card-project/webmcp-example.html
+
+## Project Photo
+![](./docs/demo1.png)
+![](./docs/demo2.png)
+![](./docs/demo3.png)
+
 ## 📚 快速導航
 
 👉 **[5 分鐘快速入門 →](docs/QUICKSTART.md)** | **[常見問題 →](docs/FAQ.md)** | **[功能詳情 →](docs/FEATURES.md)** | **[瀏覽器相容性 →](docs/BROWSER_COMPATIBILITY.md)**
