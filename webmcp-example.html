@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebMCP 測試頁</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: #0f172a; color: #e2e8f0; }
+    h1 { margin: 0 0 14px; font-size: 22px; }
+    .wrap { display: grid; gap: 12px; max-width: 1100px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .card { background: #111827; border: 1px solid #334155; border-radius: 10px; padding: 12px; }
+    label { font-size: 12px; color: #94a3b8; display: block; margin-bottom: 6px; }
+    input, select, textarea, button { width: 100%; box-sizing: border-box; border-radius: 8px; border: 1px solid #475569; background: #0b1220; color: #e2e8f0; padding: 10px 12px; font-size: 14px; }
+    textarea { min-height: 140px; resize: vertical; }
+    button { cursor: pointer; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border: none; font-weight: 600; }
+    .small { font-size: 12px; color: #94a3b8; }
+    .out { white-space: pre-wrap; word-break: break-word; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>WebMCP 調用範例頁</h1>
+    <div class="small">用途：測試 <code>tools/list</code>、<code>tools/call</code>，並驗證 postMessage / HTTP 兩種傳輸。請先開啟主頁。</div>
+
+    <div class="row">
+      <div class="card">
+        <label>主頁 URL（同網域）</label>
+        <input id="targetUrl" value="./index.html" />
+      </div>
+      <div class="card">
+        <label>連線狀態</label>
+        <div id="status" class="out">尚未連線</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="card">
+        <label>Transport</label>
+        <select id="transportMode">
+          <option value="postmessage">postMessage（主頁視窗）</option>
+          <option value="http">HTTP（/api/webmcp）</option>
+        </select>
+      </div>
+      <div class="card">
+        <label>模式說明</label>
+        <div class="small">目前 WebMCP 已移除 auth 驗證，可直接呼叫。</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:grid;grid-template-columns:1fr;gap:8px;">
+        <button id="openBtn">開啟主頁並建立連線</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="card">
+        <label>快速操作</label>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+          <button id="listBtn">tools/list</button>
+          <button id="stateBtn">card.getState</button>
+          <button id="langBtn">切換語言→fr-FR</button>
+        </div>
+      </div>
+      <div class="card">
+        <label>工具呼叫</label>
+        <select id="toolName">
+          <option value="card.getState">card.getState</option>
+          <option value="card.setType">card.setType</option>
+          <option value="card.setLanguage">card.setLanguage</option>
+          <option value="card.setTheme">card.setTheme</option>
+          <option value="card.updateField">card.updateField</option>
+          <option value="card.updateFields">card.updateFields</option>
+          <option value="card.updateLayout">card.updateLayout</option>
+          <option value="card.setQrContent">card.setQrContent</option>
+          <option value="card.applyTemplate">card.applyTemplate</option>
+          <option value="card.setBackgroundImage">card.setBackgroundImage</option>
+          <option value="card.export">card.export</option>
+          <option value="card.simulateAction">card.simulateAction</option>
+          <option value="card.setState">card.setState</option>
+        </select>
+        <label style="margin-top:8px;">範例模板</label>
+        <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;">
+          <select id="examplePreset"></select>
+          <button id="applyExampleBtn">載入範例</button>
+          <button id="copyRpcBtn">複製 RPC</button>
+        </div>
+        <label style="margin-top:8px;">arguments (JSON)</label>
+        <textarea id="toolArgs">{}</textarea>
+        <div class="small" id="exampleHint" style="margin-top:6px;">請先選擇工具，再載入範例</div>
+        <button id="callBtn" style="margin-top:8px;">tools/call</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>Response</label>
+      <div id="output" class="out">尚無輸出</div>
+    </div>
+  </div>
+
+  <script>
+    let targetWindow = null;
+    let pendingRequests = new Map();
+
+    const statusEl = document.getElementById('status');
+    const outputEl = document.getElementById('output');
+    const transportModeEl = document.getElementById('transportMode');
+    const toolNameEl = document.getElementById('toolName');
+    const toolArgsEl = document.getElementById('toolArgs');
+    const examplePresetEl = document.getElementById('examplePreset');
+    const exampleHintEl = document.getElementById('exampleHint');
+
+    const TOOL_EXAMPLES = {
+      'card.getState': [
+        { label: '讀取目前完整狀態', args: {}, hint: '回傳 cardType、lang、theme、cardData、貼圖與 WebMCP 狀態資訊。' }
+      ],
+      'card.setType': [
+        { label: '切換主卡片（main）', args: { cardType: 'main' }, hint: '可用值：main、qr、custom。' },
+        { label: '切換 QR 卡片（qr）', args: { cardType: 'qr' }, hint: '快速切到 QR 名片樣式。' }
+      ],
+      'card.setLanguage': [
+        { label: '切換繁體中文', args: { lang: 'zh-TW' }, hint: '可改為 en-US、ja-JP、ko-KR 等語系。' },
+        { label: '切換法語', args: { lang: 'fr-FR' }, hint: '示範 i18n 語系控制。' }
+      ],
+      'card.setTheme': [
+        { label: '切換深色主題', args: { theme: 'dark' }, hint: '可用值：light、dark。' },
+        { label: '切換淺色主題', args: { theme: 'light' }, hint: '切換 UI 主題模式。' }
+      ],
+      'card.updateField': [
+        { label: '更新姓名', args: { field: 'name', value: 'Alex Chen' }, hint: '單一欄位更新最常用。' },
+        { label: '更新地址', args: { field: 'address', value: '台北市信義區松仁路 100 號' }, hint: '可更新任意 cardData 欄位。' }
+      ],
+      'card.updateFields': [
+        {
+          label: '批次更新基本資訊',
+          args: {
+            updates: {
+              name: 'Lian Yong Li',
+              title: '產品設計師',
+              company: 'Virtual Studio',
+              phone: '+886-2-8888-8888',
+              website: 'https://example.com',
+              showCountryFlag: true
+            }
+          },
+          hint: '一次更新多個 cardData 欄位。'
+        }
+      ],
+      'card.updateLayout': [
+        {
+          label: '調整字體與圓角',
+          args: {
+            updates: {
+              fontSize: 16,
+              borderRadiusOuter: 18,
+              borderRadiusInner: 10,
+              shadowBlur: 28,
+              padding: 28
+            }
+          },
+          hint: '針對版面欄位做批次調整。'
+        }
+      ],
+      'card.setQrContent': [
+        { label: '設定 QR 內容為網站', args: { value: 'https://virtual-card.example/contact' }, hint: 'QR 掃描導向 URL。' }
+      ],
+      'card.applyTemplate': [
+        { label: '套用 professional 模板', args: { templateName: 'professional' }, hint: '可改成其它模板名稱。' }
+      ],
+      'card.setBackgroundImage': [
+        { label: '設定背景圖 URL', args: { imageUrl: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=60' }, hint: 'custom 卡片可直接替換背景。' }
+      ],
+      'card.export': [
+        { label: '匯出 PNG', args: { format: 'png' }, hint: 'format 可用 png、jpg、webp、html、vcf。' },
+        { label: '匯出 VCF 聯絡檔', args: { format: 'vcf' }, hint: '可直接匯入手機聯絡人。' }
+      ],
+      'card.simulateAction': [
+        { label: '模擬點擊匯出 PNG', args: { action: 'click', target: 'export.png' }, hint: '支援 export.png/jpg/webp/html/vcf。' },
+        { label: '模擬輸入姓名', args: { action: 'input', target: 'name', value: 'AI Remote User' }, hint: '等同遠端輸入欄位。' }
+      ],
+      'card.setState': [
+        {
+          label: '完整狀態 Patch 範例',
+          args: {
+            statePatch: {
+              cardType: 'main',
+              lang: 'zh-TW',
+              theme: 'dark',
+              qrContent: 'https://example.com/hello',
+              cardData: {
+                name: 'State Patch User',
+                title: 'AI Engineer',
+                company: 'MCP Labs',
+                country: '台灣',
+                address: '台北市中正區重慶南路一段 122 號',
+                showCountryFlag: true,
+                bgGradientColor1: '#4f46e5',
+                bgGradientColor2: '#9333ea',
+                fontSize: 15
+              }
+            }
+          },
+          hint: '可同時更新頂層狀態與 cardData。'
+        }
+      ]
+    };
+
+    function renderExamplePresets(toolName) {
+      const examples = TOOL_EXAMPLES[toolName] || [{ label: '預設空物件', args: {}, hint: '目前沒有定義此工具範例。' }];
+      examplePresetEl.innerHTML = '';
+      examples.forEach((example, index) => {
+        const option = document.createElement('option');
+        option.value = String(index);
+        option.textContent = example.label;
+        examplePresetEl.appendChild(option);
+      });
+      applySelectedExample(toolName, 0);
+    }
+
+    function applySelectedExample(toolName, indexString) {
+      const examples = TOOL_EXAMPLES[toolName] || [];
+      const index = Number(indexString);
+      const picked = examples[index] || { args: {}, hint: '請手動輸入 JSON。' };
+      toolArgsEl.value = JSON.stringify(picked.args, null, 2);
+      exampleHintEl.textContent = picked.hint || '';
+    }
+
+    function buildRpcPayloadPreview() {
+      let args;
+      try {
+        args = JSON.parse(toolArgsEl.value || '{}');
+      } catch {
+        throw new Error('arguments JSON 格式錯誤，無法複製 RPC。');
+      }
+      return {
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'tools/call',
+        params: {
+          name: toolNameEl.value,
+          arguments: args
+        }
+      };
+    }
+
+    const postMessageRequest = (method, params = {}) => {
+      return new Promise((resolve, reject) => {
+        if (!targetWindow || targetWindow.closed) {
+          reject(new Error('主頁視窗未連線，請先點擊「開啟主頁並建立連線」'));
+          return;
+        }
+        const id = Date.now() + Math.floor(Math.random() * 1000);
+
+        pendingRequests.set(id, { resolve, reject });
+
+        targetWindow.postMessage({
+          type: 'WEB_MCP_REQUEST',
+          jsonrpc: '2.0',
+          id,
+          method,
+          params
+        }, '*');
+
+        setTimeout(() => {
+          if (!pendingRequests.has(id)) return;
+          pendingRequests.delete(id);
+          reject(new Error('Request timeout (5s)'));
+        }, 5000);
+      });
+    };
+
+    const httpRequest = async (method, params = {}) => {
+      const id = Date.now() + Math.floor(Math.random() * 1000);
+      const res = await fetch('./api/webmcp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id,
+          method,
+          params
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error?.message || `HTTP ${res.status}`);
+      }
+      if (data.error) {
+        throw new Error(data.error.message || 'Unknown error');
+      }
+      return data.result;
+    };
+
+    const request = async (method, params = {}) => {
+      if (transportModeEl.value === 'http') {
+        return httpRequest(method, params);
+      }
+      return postMessageRequest(method, params);
+    };
+
+    window.addEventListener('message', (event) => {
+      const data = event.data;
+      if (!data || data.type !== 'WEB_MCP_RESPONSE') return;
+      const pending = pendingRequests.get(data.id);
+      if (!pending) return;
+      pendingRequests.delete(data.id);
+      if (data.error) pending.reject(new Error(data.error.message || 'Unknown error'));
+      else pending.resolve(data.result);
+    });
+
+    document.getElementById('openBtn').addEventListener('click', () => {
+      const url = document.getElementById('targetUrl').value || './index.html';
+      targetWindow = window.open(url, 'virtual-card-main');
+      statusEl.textContent = targetWindow ? '已連線（請確認主頁已載入）' : '開啟失敗（可能被瀏覽器阻擋）';
+    });
+
+    toolNameEl.addEventListener('change', () => {
+      renderExamplePresets(toolNameEl.value);
+    });
+
+    examplePresetEl.addEventListener('change', () => {
+      applySelectedExample(toolNameEl.value, examplePresetEl.value);
+    });
+
+    document.getElementById('applyExampleBtn').addEventListener('click', () => {
+      applySelectedExample(toolNameEl.value, examplePresetEl.value || '0');
+      outputEl.textContent = '已載入範例 arguments';
+    });
+
+    document.getElementById('copyRpcBtn').addEventListener('click', async () => {
+      try {
+        const payload = buildRpcPayloadPreview();
+        const text = JSON.stringify(payload, null, 2);
+        await navigator.clipboard.writeText(text);
+        outputEl.textContent = '已複製 tools/call JSON-RPC 範例到剪貼簿';
+      } catch (e) {
+        outputEl.textContent = `Error: ${e.message}`;
+      }
+    });
+
+    document.getElementById('listBtn').addEventListener('click', async () => {
+      try {
+        const res = await request('tools/list');
+        outputEl.textContent = JSON.stringify(res, null, 2);
+      } catch (e) {
+        outputEl.textContent = `Error: ${e.message}`;
+      }
+    });
+
+    document.getElementById('stateBtn').addEventListener('click', async () => {
+      try {
+        const res = await request('tools/call', { name: 'card.getState', arguments: {} });
+        outputEl.textContent = JSON.stringify(res, null, 2);
+      } catch (e) {
+        outputEl.textContent = `Error: ${e.message}`;
+      }
+    });
+
+    document.getElementById('langBtn').addEventListener('click', async () => {
+      try {
+        const res = await request('tools/call', { name: 'card.setLanguage', arguments: { lang: 'fr-FR' } });
+        outputEl.textContent = JSON.stringify(res, null, 2);
+      } catch (e) {
+        outputEl.textContent = `Error: ${e.message}`;
+      }
+    });
+
+    document.getElementById('callBtn').addEventListener('click', async () => {
+      try {
+        const name = toolNameEl.value;
+        const args = JSON.parse(toolArgsEl.value || '{}');
+        const res = await request('tools/call', { name, arguments: args });
+        outputEl.textContent = JSON.stringify(res, null, 2);
+      } catch (e) {
+        outputEl.textContent = `Error: ${e.message}`;
+      }
+    });
+
+    renderExamplePresets(toolNameEl.value);
+  </script>
+</body>
+</html>

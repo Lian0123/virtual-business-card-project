@@ -25,6 +25,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <link rel="manifest" href="./manifest.json">
     <link rel="alternate" type="application/json" href="./skill.json">
+    <link rel="alternate" type="application/json" href="./webmcp.json">
+    <link rel="alternate" type="text/html" href="./webmcp-example.html">
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='80' fill='%23667eea'>📇</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><defs><linearGradient id='grad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%23667eea;stop-opacity:1' /><stop offset='100%' style='stop-color:%23764ba2;stop-opacity:1' /></linearGradient></defs><rect width='192' height='192' fill='url(%23grad)' rx='45'/><text x='96' y='140' font-size='100' font-weight='bold' text-anchor='middle' fill='%23fff' font-family='system-ui'>📇</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -164,8 +166,10 @@
             top: 0;
             z-index: 100;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 10px;
             animation: slideInDown 0.6s ease-out;
         }
 
@@ -185,14 +189,21 @@
             font-weight: 700;
             letter-spacing: -0.5px;
             color: #fff;
+            margin: 0;
+            line-height: 1.25;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             animation: fadeInScale 0.6s ease-out 0.1s backwards;
         }
 
         .header-controls {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             align-items: center;
             flex-wrap: wrap;
+            width: 100%;
         }
 
         .theme-toggle,
@@ -257,6 +268,7 @@
 
         .lang-selector {
             min-width: 150px;
+            max-width: 200px;
         }
 
         .lang-selector:hover {
@@ -1762,6 +1774,51 @@
                     secondary: '#71b280',
                     accent: '#90ee90'
                 }
+            },
+            aurora: {
+                name: '極光風格',
+                bgImage: 'linear-gradient(135deg, #00c9ff 0%, #92fe9d 100%)',
+                colors: {
+                    primary: '#00c9ff',
+                    secondary: '#92fe9d',
+                    accent: '#5f72ff'
+                }
+            },
+            midnight: {
+                name: '午夜風格',
+                bgImage: 'linear-gradient(135deg, #232526 0%, #414345 100%)',
+                colors: {
+                    primary: '#232526',
+                    secondary: '#414345',
+                    accent: '#00c6ff'
+                }
+            },
+            peach: {
+                name: '蜜桃風格',
+                bgImage: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+                colors: {
+                    primary: '#ff8a65',
+                    secondary: '#fcb69f',
+                    accent: '#ff7043'
+                }
+            },
+            royal: {
+                name: '皇家風格',
+                bgImage: 'linear-gradient(135deg, #141e30 0%, #243b55 100%)',
+                colors: {
+                    primary: '#243b55',
+                    secondary: '#141e30',
+                    accent: '#c9a227'
+                }
+            },
+            lava: {
+                name: '熔岩風格',
+                bgImage: 'linear-gradient(135deg, #f12711 0%, #f5af19 100%)',
+                colors: {
+                    primary: '#f12711',
+                    secondary: '#f5af19',
+                    accent: '#8a2387'
+                }
             }
         };
 
@@ -1770,7 +1827,12 @@
             'en-US': { name: 'English', flag: '🇺🇸' },
             'ja-JP': { name: '日本語', flag: '🇯🇵' },
             'th-TH': { name: 'ไทย', flag: '🇹🇭' },
-            'ko-KR': { name: '한국어', flag: '🇰🇷' }
+            'ko-KR': { name: '한국어', flag: '🇰🇷' },
+            'vi-VN': { name: 'Tiếng Việt', flag: '🇻🇳' },
+            'fr-FR': { name: 'Français', flag: '🇫🇷' },
+            'de-DE': { name: 'Deutsch', flag: '🇩🇪' },
+            'es-ES': { name: 'Español', flag: '🇪🇸' },
+            'pt-PT': { name: 'Português', flag: '🇵🇹' }
         };
 
         const TRANSLATIONS = {
@@ -2751,6 +2813,56 @@
             }
         };
 
+        const buildLocale = (overrides = {}) => ({
+            ...TRANSLATIONS['en-US'],
+            ...overrides
+        });
+
+        TRANSLATIONS['vi-VN'] = buildLocale({
+            title: 'Trình Tạo Danh Thiếp Chuyên Nghiệp',
+            basicSettings: 'Cài đặt cơ bản',
+            advancedSettings: 'Nâng cao',
+            designTemplate: 'Mẫu thiết kế',
+            countryLabel: 'Quốc gia/Khu vực',
+            showCountryFlag: 'Hiển thị cờ quốc gia'
+        });
+
+        TRANSLATIONS['fr-FR'] = buildLocale({
+            title: 'Créateur de Carte Professionnelle',
+            basicSettings: 'Paramètres de base',
+            advancedSettings: 'Avancé',
+            designTemplate: 'Modèles de design',
+            countryLabel: 'Pays/Région',
+            showCountryFlag: 'Afficher le drapeau'
+        });
+
+        TRANSLATIONS['de-DE'] = buildLocale({
+            title: 'Professioneller Visitenkarten-Generator',
+            basicSettings: 'Grundeinstellungen',
+            advancedSettings: 'Erweitert',
+            designTemplate: 'Designvorlagen',
+            countryLabel: 'Land/Region',
+            showCountryFlag: 'Landesflagge anzeigen'
+        });
+
+        TRANSLATIONS['es-ES'] = buildLocale({
+            title: 'Creador Profesional de Tarjetas',
+            basicSettings: 'Configuración básica',
+            advancedSettings: 'Avanzado',
+            designTemplate: 'Plantillas de diseño',
+            countryLabel: 'País/Región',
+            showCountryFlag: 'Mostrar bandera'
+        });
+
+        TRANSLATIONS['pt-PT'] = buildLocale({
+            title: 'Criador Profissional de Cartões',
+            basicSettings: 'Configurações básicas',
+            advancedSettings: 'Avançado',
+            designTemplate: 'Modelos de design',
+            countryLabel: 'País/Região',
+            showCountryFlag: 'Mostrar bandeira'
+        });
+
         const BG_PATTERNS = {
             dots: 'radial-gradient(circle, rgba(255,255,255,0.2) 2px, transparent 2px)',
             grid: 'linear-gradient(0deg, rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)',
@@ -2820,7 +2932,10 @@
 
         function App() {
             const [loading, setLoading] = useState(false);
-            const [lang, setLang] = useState('zh-TW');
+            const [lang, setLang] = useState(() => {
+                const savedLang = localStorage.getItem('vc_lang');
+                return savedLang && LANGUAGES[savedLang] ? savedLang : 'zh-TW';
+            });
             const [theme, setTheme] = useState('dark');
             const [cardType, setCardType] = useState('main');
             const [customImage, setCustomImage] = useState(null);
@@ -2892,12 +3007,13 @@
                 showEmail: true,
                 showPhone: true,
                 showSocial: true,
+                showCountryFlag: true,
                 bgPatternType: 'none',
                 bgPatternScale: 1,
                 bgPatternOpacity: 1
             });
 
-            const t = TRANSLATIONS[lang];
+            const t = TRANSLATIONS[lang] || TRANSLATIONS['en-US'];
 
             const applyTemplate = (templateName) => {
                 const template = CARD_TEMPLATES[templateName];
@@ -2917,6 +3033,10 @@
             useEffect(() => {
                 document.body.className = `${theme}-theme`;
             }, [theme]);
+
+            useEffect(() => {
+                localStorage.setItem('vc_lang', lang);
+            }, [lang]);
 
             const toggleTheme = () => {
                 setTheme(theme === 'light' ? 'dark' : 'light');
@@ -3027,15 +3147,22 @@
             };
 
             useEffect(() => {
+                const webMcpEndpoint = new URL('./api/webmcp', window.location.href).toString();
                 const api = {
-                    version: '1.0.0',
+                    version: '1.2.0',
                     getState: () => ({
                         cardType,
                         lang,
                         theme,
                         cardData,
                         qrContent,
-                        stickerCount: textStickers.length
+                        stickerCount: textStickers.length,
+                        selectedTemplate,
+                        webMcp: {
+                            enabled: true,
+                            protocol: 'webmcp-jsonrpc',
+                            endpoint: webMcpEndpoint
+                        }
                     }),
                     setCardType: (type) => setCardType(type),
                     setLanguage: (nextLang) => setLang(nextLang),
@@ -3043,13 +3170,124 @@
                     updateField: (field, value) => updateCardData(field, value),
                     setQrContent: (value) => setQrContent(value),
                     applyTemplate: (templateName) => applyTemplate(templateName),
+                    setBackgroundImage: (imageUrl) => setCustomImage(imageUrl),
+                    updateLayout: (updates) => {
+                        Object.entries(updates || {}).forEach(([field, value]) => updateCardData(field, value));
+                    },
+                    updateFields: (updates = {}) => {
+                        Object.entries(updates || {}).forEach(([field, value]) => updateCardData(field, value));
+                    },
+                    setState: (statePatch = {}) => {
+                        if (statePatch.cardType !== undefined) setCardType(statePatch.cardType);
+                        if (statePatch.lang !== undefined) setLang(statePatch.lang);
+                        if (statePatch.theme !== undefined) setTheme(statePatch.theme);
+                        if (statePatch.qrContent !== undefined) setQrContent(statePatch.qrContent);
+                        if (statePatch.selectedTemplate !== undefined) setSelectedTemplate(statePatch.selectedTemplate);
+                        if (statePatch.customImage !== undefined) setCustomImage(statePatch.customImage);
+                        if (statePatch.textStickers !== undefined && Array.isArray(statePatch.textStickers)) setTextStickers(statePatch.textStickers);
+                        if (statePatch.cardData && typeof statePatch.cardData === 'object') {
+                            setCardData(prev => ({ ...prev, ...statePatch.cardData }));
+                        }
+                    },
                     addTextSticker: () => addTextSticker(),
                     addImageSticker: (imageUrl) => addImageSticker(imageUrl),
                     updateSticker: (id, updates) => updateSticker(id, updates),
-                    removeSticker: (id) => removeSticker(id)
+                    removeSticker: (id) => removeSticker(id),
+                    dispatchPreviewAction: (action, payload = {}) => {
+                        window.dispatchEvent(new CustomEvent('VC_PREVIEW_ACTION', { detail: { action, ...payload } }));
+                    }
+                };
+
+                const webMcpTools = [
+                    { name: 'card.getState', description: 'Get current app and card state' },
+                    { name: 'card.setType', description: 'Set current card type', inputSchema: { cardType: 'main|qr|custom' } },
+                    { name: 'card.setLanguage', description: 'Set UI language', inputSchema: { lang: 'locale code' } },
+                    { name: 'card.setTheme', description: 'Set theme mode', inputSchema: { theme: 'light|dark' } },
+                    { name: 'card.updateField', description: 'Update a card field', inputSchema: { field: 'string', value: 'any' } },
+                    { name: 'card.updateFields', description: 'Update multiple fields', inputSchema: { updates: 'object' } },
+                    { name: 'card.updateLayout', description: 'Update layout related fields', inputSchema: { updates: 'object' } },
+                    { name: 'card.setQrContent', description: 'Set QR content', inputSchema: { value: 'string' } },
+                    { name: 'card.applyTemplate', description: 'Apply design template', inputSchema: { templateName: 'string' } },
+                    { name: 'card.setBackgroundImage', description: 'Set custom background image URL', inputSchema: { imageUrl: 'string' } },
+                    { name: 'card.export', description: 'Export card', inputSchema: { format: 'png|jpg|webp|html|vcf' } },
+                    { name: 'card.simulateAction', description: 'Simulate user action', inputSchema: { action: 'string', target: 'string', value: 'any' } },
+                    { name: 'card.setState', description: 'Set top-level app state and cardData patch', inputSchema: { statePatch: 'object' } }
+                ];
+
+                const callWebMcpTool = async (name, input = {}) => {
+                    switch (name) {
+                        case 'card.getState':
+                            return api.getState();
+                        case 'card.setType':
+                            api.setCardType(input.cardType);
+                            return { ok: true };
+                        case 'card.setLanguage':
+                            api.setLanguage(input.lang);
+                            return { ok: true };
+                        case 'card.setTheme':
+                            api.setThemeMode(input.theme);
+                            return { ok: true };
+                        case 'card.updateField':
+                            api.updateField(input.field, input.value);
+                            return { ok: true };
+                        case 'card.updateFields':
+                            api.updateFields(input.updates || {});
+                            return { ok: true };
+                        case 'card.updateLayout':
+                            api.updateLayout(input.updates || {});
+                            return { ok: true };
+                        case 'card.setQrContent':
+                            api.setQrContent(input.value || '');
+                            return { ok: true };
+                        case 'card.applyTemplate':
+                            api.applyTemplate(input.templateName);
+                            return { ok: true };
+                        case 'card.setBackgroundImage':
+                            api.setBackgroundImage(input.imageUrl || '');
+                            return { ok: true };
+                        case 'card.export': {
+                            const format = input.format || 'png';
+                            api.dispatchPreviewAction('export', { format });
+                            return { ok: true, format };
+                        }
+                        case 'card.simulateAction': {
+                            if (input.action === 'click') {
+                                const clickTargetMap = {
+                                    'export.png': { action: 'export', format: 'png' },
+                                    'export.jpg': { action: 'export', format: 'jpg' },
+                                    'export.webp': { action: 'export', format: 'webp' },
+                                    'export.html': { action: 'export', format: 'html' },
+                                    'export.vcf': { action: 'export', format: 'vcf' },
+                                    'animation.replay': { action: 'animation.replay' },
+                                    'animation.toggle': { action: 'animation.toggle' }
+                                };
+                                const mapped = clickTargetMap[input.target];
+                                if (!mapped) throw new Error(`Unsupported click target: ${input.target}`);
+                                api.dispatchPreviewAction(mapped.action, mapped);
+                                return { ok: true, simulated: 'click', target: input.target };
+                            }
+                            if (input.action === 'input') {
+                                api.updateField(input.target, input.value);
+                                return { ok: true, simulated: 'input', target: input.target };
+                            }
+                            throw new Error(`Unsupported simulate action: ${input.action}`);
+                        }
+                        case 'card.setState':
+                            api.setState(input.statePatch || {});
+                            return { ok: true };
+                        default:
+                            throw new Error(`Unsupported WebMCP tool: ${name}`);
+                    }
                 };
 
                 window.VirtualCardSkill = api;
+                window.WebMCP = {
+                    version: '0.2.0',
+                    protocol: 'webmcp-jsonrpc',
+                    endpoint: webMcpEndpoint,
+                    listTools: () => webMcpTools,
+                    callTool: (name, input) => callWebMcpTool(name, input)
+                };
 
                 const onSkillMessage = async (event) => {
                     const payload = event.data;
@@ -3119,12 +3357,79 @@
                     }
                 };
 
+                const onWebMcpMessage = async (event) => {
+                    const payload = event.data;
+                    if (!payload || payload.type !== 'WEB_MCP_REQUEST') return;
+
+                    const id = payload.id || Date.now();
+                    const method = payload.method;
+                    const params = payload.params || {};
+                    try {
+                        let result;
+                        if (method === 'tools/list') {
+                            result = { tools: webMcpTools };
+                        } else if (method === 'tools/call') {
+                            result = { content: [{ type: 'json', data: await callWebMcpTool(params.name, params.arguments || {}) }] };
+                        } else {
+                            throw new Error(`Unsupported WebMCP method: ${method}`);
+                        }
+
+                        if (event.source && typeof event.source.postMessage === 'function') {
+                            event.source.postMessage({ type: 'WEB_MCP_RESPONSE', jsonrpc: '2.0', id, result }, '*');
+                        }
+                    } catch (error) {
+                        if (event.source && typeof event.source.postMessage === 'function') {
+                            event.source.postMessage({
+                                type: 'WEB_MCP_RESPONSE',
+                                jsonrpc: '2.0',
+                                id,
+                                error: { code: -32000, message: String(error) }
+                            }, '*');
+                        }
+                    }
+                };
+
+                const onServiceWorkerMessage = async (event) => {
+                    const payload = event.data;
+                    if (!payload || payload.type !== 'WEB_MCP_HTTP_REQUEST') return;
+                    const port = event.ports && event.ports[0];
+                    if (!port) return;
+
+                    const rpc = payload.payload || {};
+                    const id = rpc.id || payload.id || Date.now();
+
+                    try {
+                        let result;
+                        if (rpc.method === 'tools/list') {
+                            result = { tools: webMcpTools };
+                        } else if (rpc.method === 'tools/call') {
+                            result = { content: [{ type: 'json', data: await callWebMcpTool(rpc.params?.name, rpc.params?.arguments || {}) }] };
+                        } else {
+                            throw new Error(`Unsupported WebMCP method: ${rpc.method}`);
+                        }
+                        port.postMessage({ jsonrpc: '2.0', id, result });
+                    } catch (error) {
+                        port.postMessage({
+                            jsonrpc: '2.0',
+                            id,
+                            error: { code: -32000, message: String(error) }
+                        });
+                    }
+                };
+
                 window.addEventListener('message', onSkillMessage);
+                window.addEventListener('message', onWebMcpMessage);
+                navigator.serviceWorker?.addEventListener('message', onServiceWorkerMessage);
 
                 return () => {
                     window.removeEventListener('message', onSkillMessage);
+                    window.removeEventListener('message', onWebMcpMessage);
+                    navigator.serviceWorker?.removeEventListener('message', onServiceWorkerMessage);
                     if (window.VirtualCardSkill === api) {
                         delete window.VirtualCardSkill;
+                    }
+                    if (window.WebMCP) {
+                        delete window.WebMCP;
                     }
                 };
             }, [cardType, lang, theme, cardData, qrContent, textStickers]);
@@ -3325,6 +3630,19 @@
                                             value={cardData.country}
                                             onChange={(e) => updateCardData('country', e.target.value)}
                                         />
+                                    </div>
+                                    <div className="control-group">
+                                        <label className="control-label">
+                                            {t.showCountryFlag || '顯示國旗'}
+                                        </label>
+                                        <button
+                                            type="button"
+                                            className={`button-toggle ${cardData.showCountryFlag ? 'active' : ''}`}
+                                            style={{ width: '100%' }}
+                                            onClick={() => updateCardData('showCountryFlag', !cardData.showCountryFlag)}
+                                        >
+                                            {cardData.showCountryFlag ? '🏳️ ON' : '🚫 OFF'}
+                                        </button>
                                     </div>
                                     <div className="control-group">
                                         <label className="control-label">{t.addressLabel}</label>
@@ -3556,6 +3874,26 @@
                                         />
                                     </div>
                                     <div style={{ marginTop: '8px', padding: '8px', borderRadius: '4px', background: `linear-gradient(135deg, ${cardData.bgGradientColor1 || '#667eea'} 0%, ${cardData.bgGradientColor2 || '#764ba2'} 100%)`, height: '40px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}></div>
+                                    <div style={{ marginTop: '10px' }}>
+                                        <label className="control-label">{t.colorPresetsLabel || '色彩快速預設'}</label>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
+                                            {Object.entries(CARD_TEMPLATES).map(([key, template]) => (
+                                                <button
+                                                    key={`color-${key}`}
+                                                    type="button"
+                                                    className="preset-btn"
+                                                    title={template.name}
+                                                    style={{ background: template.bgImage, borderColor: 'rgba(255,255,255,0.2)' }}
+                                                    onClick={() => {
+                                                        updateCardData('bgGradientColor1', template.colors.primary);
+                                                        updateCardData('bgGradientColor2', template.colors.secondary);
+                                                        updateCardData('borderGradientColor1', template.colors.primary);
+                                                        updateCardData('borderGradientColor2', template.colors.secondary);
+                                                    }}
+                                                ></button>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="section">
@@ -4137,6 +4475,53 @@
         function PreviewPanel({ cardData, t, setLoading, cardType, theme, customImage, textStickers, qrContent, selectedTemplate, applyTemplate, customDecorations = [] }) {
             const cardRef = useRef(null);
             const freeDecorations = customDecorations && customDecorations.length ? customDecorations : (cardData.customDecorations || []);
+            const COUNTRY_FLAG_MAP = {
+                '台灣': '🇹🇼', Taiwan: '🇹🇼', '臺灣': '🇹🇼',
+                '日本': '🇯🇵', Japan: '🇯🇵',
+                '韓國': '🇰🇷', '南韓': '🇰🇷', Korea: '🇰🇷',
+                '泰國': '🇹🇭', Thailand: '🇹🇭',
+                '越南': '🇻🇳', Vietnam: '🇻🇳',
+                '法國': '🇫🇷', France: '🇫🇷',
+                '德國': '🇩🇪', Germany: '🇩🇪',
+                '西班牙': '🇪🇸', Spain: '🇪🇸',
+                '葡萄牙': '🇵🇹', Portugal: '🇵🇹',
+                '美國': '🇺🇸', USA: '🇺🇸', US: '🇺🇸',
+                '英國': '🇬🇧', UK: '🇬🇧', Britain: '🇬🇧',
+                '中國': '🇨🇳', China: '🇨🇳',
+                '香港': '🇭🇰', HongKong: '🇭🇰',
+                '澳門': '🇲🇴', Macao: '🇲🇴',
+                '新加坡': '🇸🇬', Singapore: '🇸🇬',
+                '馬來西亞': '🇲🇾', Malaysia: '🇲🇾',
+                '印尼': '🇮🇩', Indonesia: '🇮🇩',
+                '菲律賓': '🇵🇭', Philippines: '🇵🇭',
+                '印度': '🇮🇳', India: '🇮🇳',
+                '澳洲': '🇦🇺', Australia: '🇦🇺',
+                '加拿大': '🇨🇦', Canada: '🇨🇦',
+                '巴西': '🇧🇷', Brazil: '🇧🇷',
+                '墨西哥': '🇲🇽', Mexico: '🇲🇽',
+                '義大利': '🇮🇹', Italy: '🇮🇹',
+                '荷蘭': '🇳🇱', Netherlands: '🇳🇱',
+                '瑞士': '🇨🇭', Switzerland: '🇨🇭',
+                '瑞典': '🇸🇪', Sweden: '🇸🇪',
+                '挪威': '🇳🇴', Norway: '🇳🇴',
+                '丹麥': '🇩🇰', Denmark: '🇩🇰',
+                '芬蘭': '🇫🇮', Finland: '🇫🇮'
+            };
+
+            const resolveCountryFlag = (country = '') => {
+                const raw = String(country || '').trim();
+                if (!raw) return '';
+                if (/^[\u{1F1E6}-\u{1F1FF}]{2}/u.test(raw)) return '';
+                return COUNTRY_FLAG_MAP[raw] || '';
+            };
+
+            const formatCountryDisplay = (country = '') => {
+                const raw = String(country || '').trim();
+                if (!raw) return '';
+                if (cardData.showCountryFlag === false) return raw;
+                const flag = resolveCountryFlag(raw);
+                return flag ? `${flag} ${raw}` : raw;
+            };
 
             const getFilterStyle = () => {
                 let filters = [];
@@ -4434,7 +4819,7 @@
                                         <h2 style="margin: 0 0 6px 0; font-size: 22px; font-weight: bold; color: #1a1a1a; word-break: break-word;">${cardData.name}</h2>
                                         <p style="margin: 0 0 6px 0; font-size: 13px; color: #667eea; font-weight: 600; word-break: break-word;">${cardData.title} @ ${cardData.company}</p>
                                         ${decorativeHtml}
-                                        <p style="margin: 4px 0; font-size: 11px; color: #666;">📍 ${cardData.country}</p>
+                                        <p style="margin: 4px 0; font-size: 11px; color: #666;">📍 ${formatCountryDisplay(cardData.country)}</p>
                                         ${cardData.address ? `<p style="margin: 4px 0; font-size: 11px; color: #666; word-break: break-word;">🏢 ${cardData.address}</p>` : ''}
                                         ${cardData.intro ? `<p style="margin: 4px 0; font-size: 10px; color: #888; line-height: 1.3;">💬 ${cardData.intro}</p>` : ''}
                                     </div>
@@ -4457,7 +4842,8 @@
                                     ${decorativeHtml}
                                     ${cardData.intro ? `<p style="margin: 0 0 8px 0; font-size: 11px; color: #666; line-height: 1.4;">${cardData.intro}</p>` : ''}
                                     <div style="font-size: 10px; color: #666; line-height: 1.6;">
-                                        <p>📍 ${cardData.country}${cardData.address ? ` · ${cardData.address}` : ''}</p>
+                                        ${cardData.country ? `<p>📍 ${formatCountryDisplay(cardData.country)}</p>` : ''}
+                                        ${cardData.address ? `<p>🏢 ${cardData.address}</p>` : ''}
                                         <p>📧 ${cardData.email}</p>
                                         <p>📱 ${cardData.phone}</p>
                                         ${cardData.website ? `<p>🌐 ${cardData.website}</p>` : ''}
@@ -4721,6 +5107,60 @@ END:VCARD`;
                 }
             };
 
+            useEffect(() => {
+                const runPreviewAction = async (detail = {}) => {
+                    const action = detail.action;
+                    if (!action) return { ok: false, message: 'Missing preview action' };
+
+                    if (action === 'export') {
+                        const format = detail.format || 'png';
+                        if (['png', 'jpg', 'webp'].includes(format)) {
+                            await downloadCard(format);
+                            return { ok: true, action, format };
+                        }
+                        if (format === 'html') {
+                            await downloadAsHTML();
+                            return { ok: true, action, format };
+                        }
+                        if (format === 'vcf') {
+                            await downloadAsVCF();
+                            return { ok: true, action, format };
+                        }
+                        throw new Error(`Unsupported export format: ${format}`);
+                    }
+
+                    if (action === 'animation.replay') {
+                        triggerAnimationReplay();
+                        return { ok: true, action };
+                    }
+
+                    if (action === 'animation.toggle') {
+                        toggleAnimationPlayPause();
+                        return { ok: true, action };
+                    }
+
+                    throw new Error(`Unsupported preview action: ${action}`);
+                };
+
+                const onPreviewAction = async (event) => {
+                    try {
+                        await runPreviewAction(event.detail || {});
+                    } catch (error) {
+                        console.warn('[WebMCP][Preview] Action error:', error);
+                    }
+                };
+
+                window.VirtualCardPreviewActions = { run: runPreviewAction };
+                window.addEventListener('VC_PREVIEW_ACTION', onPreviewAction);
+
+                return () => {
+                    window.removeEventListener('VC_PREVIEW_ACTION', onPreviewAction);
+                    if (window.VirtualCardPreviewActions && window.VirtualCardPreviewActions.run === runPreviewAction) {
+                        delete window.VirtualCardPreviewActions;
+                    }
+                };
+            }, [cardType, qrContent, cardData, isAnimationPlaying]);
+
             return (
                 <div className="preview-panel">
                     {/* 动画控制按钮 - 位置调整为右上角，不与卡片重叠 */}
@@ -4837,7 +5277,7 @@ END:VCARD`;
                                                 );
                                             })}
                                             <p style={{ fontSize: '11px', color: '#666', marginBottom: '2px' }}>
-                                                📍 {cardData.country}
+                                                📍 {formatCountryDisplay(cardData.country)}
                                             </p>
                                             {cardData.address && (
                                                 <p style={{ fontSize: '11px', color: '#666', marginBottom: '2px' }}>
@@ -4914,7 +5354,8 @@ END:VCARD`;
                                             </p>
                                         )}
                                         <div className="qr-contact-list" style={{ color: '#666' }}>
-                                            <p className="qr-contact-item">📍 {cardData.country}{cardData.address ? ` · ${cardData.address}` : ''}</p>
+                                            {cardData.country && <p className="qr-contact-item">📍 {formatCountryDisplay(cardData.country)}</p>}
+                                            {cardData.address && <p className="qr-contact-item">🏢 {cardData.address}</p>}
                                             <p className="qr-contact-item">📧 {cardData.email}</p>
                                             <p className="qr-contact-item">📱 {cardData.phone}</p>
                                             {cardData.website && <p className="qr-contact-item">🌐 {cardData.website}</p>}

@@ -1,10 +1,12 @@
 // Virtual Card Maker Service Worker
-const CACHE_NAME = 'virtual-card-maker-v3';
+const CACHE_NAME = 'virtual-card-maker-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
   './skill.json',
+  './webmcp.json',
+  './webmcp-example.html',
   'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css',
   'https://unpkg.com/react@18/umd/react.production.min.js',
   'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js',
@@ -26,7 +28,9 @@ self.addEventListener('install', (event) => {
           './',
           './index.html',
           './manifest.json',
-          './skill.json'
+          './skill.json',
+          './webmcp.json',
+          './webmcp-example.html'
         ]).catch(err => console.log('[Service Worker] Cache add error:', err));
       })
       .then(() => self.skipWaiting())
@@ -55,6 +59,12 @@ self.addEventListener('activate', (event) => {
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
   const { request } = event;
+  const requestUrl = new URL(request.url);
+
+  if (requestUrl.pathname.endsWith('/api/webmcp') && request.method === 'POST') {
+    event.respondWith(handleWebMcpApi(request));
+    return;
+  }
 
   // Skip cross-origin requests
   if (!request.url.includes(self.location.origin) && !request.url.includes('cdnjs') && !request.url.includes('unpkg')) {
@@ -112,6 +122,71 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
+
+async function handleWebMcpApi(request) {
+  try {
+    const body = await request.clone().json();
+    const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+
+    if (!clients || clients.length === 0) {
+      return new Response(JSON.stringify({
+        jsonrpc: '2.0',
+        id: body?.id || null,
+        error: { code: -32001, message: 'No active page client to handle WebMCP request' }
+      }), {
+        status: 503,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    const activeClient = clients[0];
+    const responsePayload = await callClientWebMcp(activeClient, {
+      id: body?.id || Date.now(),
+      payload: body,
+      origin: request.headers.get('origin') || self.location.origin
+    });
+
+    return new Response(JSON.stringify(responsePayload), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store'
+      }
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({
+      jsonrpc: '2.0',
+      id: null,
+      error: { code: -32700, message: `Parse/Dispatch error: ${String(error)}` }
+    }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
+
+function callClientWebMcp(client, requestPayload) {
+  return new Promise((resolve) => {
+    const channel = new MessageChannel();
+    const timeout = setTimeout(() => {
+      resolve({
+        jsonrpc: '2.0',
+        id: requestPayload.id,
+        error: { code: -32002, message: 'WebMCP bridge timeout' }
+      });
+    }, 7000);
+
+    channel.port1.onmessage = (event) => {
+      clearTimeout(timeout);
+      resolve(event.data);
+    };
+
+    client.postMessage({
+      type: 'WEB_MCP_HTTP_REQUEST',
+      ...requestPayload
+    }, [channel.port2]);
+  });
+}
 
 // Message handling for cache updates
 self.addEventListener('message', (event) => {

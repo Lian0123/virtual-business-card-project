@@ -5,7 +5,12 @@
   "main": "index.html",
   "scripts": {
     "start": "python3 -m http.server 8000",
-    "serve": "http-server"
+    "serve": "http-server",
+    "smoke:test": "node scripts/webmcp-smoke-test.mjs",
+    "smoke:test:setup": "npm install --save-dev playwright && npx playwright install chromium"
+  },
+  "devDependencies": {
+    "playwright": "^1.58.2"
   },
   "keywords": [
     "business card",

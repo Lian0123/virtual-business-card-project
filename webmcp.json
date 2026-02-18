@@ -1,0 +1,46 @@
+{
+  "name": "virtual-card-webmcp",
+  "version": "0.2.0",
+  "protocol": "webmcp-jsonrpc",
+  "transport": {
+    "type": "postMessage+http",
+    "requestType": "WEB_MCP_REQUEST",
+    "responseType": "WEB_MCP_RESPONSE",
+    "jsonrpc": "2.0",
+    "httpEndpoint": "./api/webmcp",
+    "httpMethod": "POST"
+  },
+  "runtime": "browser",
+  "entry": "window.WebMCP",
+  "security": {
+    "authType": "none",
+    "notes": "No auth validation required"
+  },
+  "methods": {
+    "tools/list": {
+      "description": "List available WebMCP tools"
+    },
+    "tools/call": {
+      "description": "Call tool with { name, arguments }"
+    }
+  },
+  "tools": [
+    { "name": "card.getState" },
+    { "name": "card.setType", "input": { "cardType": "main|qr|custom" } },
+    { "name": "card.setLanguage", "input": { "lang": "locale code" } },
+    { "name": "card.setTheme", "input": { "theme": "light|dark" } },
+    { "name": "card.updateField", "input": { "field": "string", "value": "any" } },
+    { "name": "card.updateFields", "input": { "updates": "object" } },
+    { "name": "card.updateLayout", "input": { "updates": "object" } },
+    { "name": "card.setQrContent", "input": { "value": "string" } },
+    { "name": "card.applyTemplate", "input": { "templateName": "string" } },
+    { "name": "card.setBackgroundImage", "input": { "imageUrl": "string" } },
+    { "name": "card.export", "input": { "format": "png|jpg|webp|html|vcf" } },
+    { "name": "card.simulateAction", "input": { "action": "click|input", "target": "string", "value": "any" } },
+    { "name": "card.setState", "input": { "statePatch": "object" } }
+  ],
+  "integration": {
+    "compatiblePlatforms": ["ChatGPT", "Google Assistant", "Custom Agents"],
+    "notes": "Use JSON-RPC over postMessage or HTTP endpoint."
+  }
+}
