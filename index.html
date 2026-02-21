@@ -2,11 +2,13 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="專業數位名片製作工具 - 線上免費創建和匯出精美的電子名片，支援PNG、JPG、WebP、HTML和vCard格式。提供多種設計範本、動畫效果、漸層顏色等功能。">
     <meta name="keywords" content="數位名片,線上名片製作,電子名片,商務卡,數位明信片,名片製作工具,免費工具,線上編輯器,個人名片,數位名片製作">
     <meta name="author" content="Virtual Card Maker">
     <meta name="theme-color" content="#667eea">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f0c29">
+    <meta name="format-detection" content="telephone=no">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     <meta name="googlebot" content="index, follow">
     <meta property="og:title" content="數位名片製作 - 線上免費工具">
@@ -22,14 +24,14 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="數位名片">
     <meta name="application-name" content="數位名片">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <link rel="manifest" href="./manifest.json">
     <link rel="alternate" type="application/json" href="./skill.json">
     <link rel="alternate" type="application/json" href="./webmcp.json">
     <link rel="alternate" type="text/html" href="./webmcp-example.html">
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='80' fill='%23667eea'>📇</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><defs><linearGradient id='grad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%23667eea;stop-opacity:1' /><stop offset='100%' style='stop-color:%23764ba2;stop-opacity:1' /></linearGradient></defs><rect width='192' height='192' fill='url(%23grad)' rx='45'/><text x='96' y='140' font-size='100' font-weight='bold' text-anchor='middle' fill='%23fff' font-family='system-ui'>📇</text></svg>">
+    <link rel="icon" type="image/png" sizes="16x16" href="./public/icons/favicon-16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./public/icons/favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./public/icons/apple-touch-icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="manifest" href="./manifest.webmanifest" />
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -118,6 +120,8 @@
             color: #e0e0e0;
             overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
         }
 
         body.light-theme {
@@ -544,25 +548,25 @@
         }
 
         .qr-name {
-            font-size: 20px;
+            font-size: calc(20px * var(--card-font-scale, 1));
             margin-bottom: 3px;
             line-height: 1.2;
         }
 
         .qr-role {
-            font-size: 12px;
+            font-size: calc(12px * var(--card-font-scale, 1));
             margin-bottom: 4px;
             line-height: 1.25;
         }
 
         .qr-intro {
-            font-size: 11px;
+            font-size: calc(11px * var(--card-font-scale, 1));
             margin-bottom: 6px;
             line-height: 1.35;
         }
 
         .qr-contact-list {
-            font-size: 10px;
+            font-size: calc(10px * var(--card-font-scale, 1));
             line-height: 1.5;
         }
 
@@ -578,7 +582,7 @@
 
         .qr-social-icon {
             margin-right: 4px;
-            font-size: 12px;
+            font-size: calc(12px * var(--card-font-scale, 1));
         }
 
         .qr-code-box {
@@ -598,7 +602,7 @@
         }
 
         .qr-scan-text {
-            font-size: 11px;
+            font-size: calc(11px * var(--card-font-scale, 1));
             line-height: 1.2;
             margin: 0;
         }
@@ -1134,14 +1138,14 @@
 
             /* 强制所有元素的 font-size */
             .qr-card-left h2 {
-                font-size: 13px !important;
+                font-size: calc(13px * var(--card-font-scale, 1)) !important;
                 margin-bottom: 2px !important;
                 word-break: break-word !important;
                 line-height: 1.2 !important;
             }
 
             .qr-card-left > p {
-                font-size: 9px !important;
+                font-size: calc(9px * var(--card-font-scale, 1)) !important;
                 margin-bottom: 2px !important;
                 word-break: break-word !important;
                 line-height: 1.2 !important;
@@ -1149,30 +1153,30 @@
 
             /* 联系信息容器 - 最重要的覆盖 */
             .qr-card-left > div[style*="fontSize"] {
-                font-size: 8px !important;
+                font-size: calc(8px * var(--card-font-scale, 1)) !important;
             }
 
             .qr-card-left > div[style*="fontSize"] p {
-                font-size: 8px !important;
+                font-size: calc(8px * var(--card-font-scale, 1)) !important;
                 margin-bottom: 1px !important;
                 word-break: break-word !important;
                 line-height: 1.2 !important;
             }
 
             .qr-card-left > div[style*="fontSize"] span {
-                font-size: 8px !important;
+                font-size: calc(8px * var(--card-font-scale, 1)) !important;
                 word-break: break-word !important;
             }
 
             /* 备用通配符选择器 */
             .qr-card-left > div > p {
-                font-size: 8px !important;
+                font-size: calc(8px * var(--card-font-scale, 1)) !important;
                 margin-bottom: 1px !important;
                 word-break: break-word !important;
             }
 
             .qr-card-left > div > span {
-                font-size: 8px !important;
+                font-size: calc(8px * var(--card-font-scale, 1)) !important;
             }
 
             /* 所有文本元素启用换行 */
@@ -1200,7 +1204,7 @@
             }
 
             .qr-card-right p {
-                font-size: 8px !important;
+                font-size: calc(8px * var(--card-font-scale, 1)) !important;
                 margin: 0 !important;
                 word-break: break-word !important;
                 line-height: 1.2 !important;
@@ -1208,15 +1212,15 @@
 
             /* 绝对覆盖所有可能的 inline style font-size */
             .qr-card-left h2[style*="fontSize"] {
-                font-size: 13px !important;
+                font-size: calc(13px * var(--card-font-scale, 1)) !important;
             }
 
             .qr-card-left p[style*="fontSize"] {
-                font-size: 9px !important;
+                font-size: calc(9px * var(--card-font-scale, 1)) !important;
             }
 
             .qr-card-left > div[style*="fontSize"] {
-                font-size: 8px !important;
+                font-size: calc(8px * var(--card-font-scale, 1)) !important;
             }
 
             #qr-code[style*="padding"] {
@@ -1224,7 +1228,7 @@
             }
 
             .qr-card-right p[style*="fontSize"] {
-                font-size: 8px !important;
+                font-size: calc(8px * var(--card-font-scale, 1)) !important;
             }
 
             .preview-container {
@@ -1376,14 +1380,14 @@
 
             /* 强制所有元素的 font-size */
             .qr-card-left h2 {
-                font-size: 12px !important;
+                font-size: calc(12px * var(--card-font-scale, 1)) !important;
                 margin-bottom: 2px !important;
                 word-break: break-word !important;
                 line-height: 1.2 !important;
             }
 
             .qr-card-left > p {
-                font-size: 8px !important;
+                font-size: calc(8px * var(--card-font-scale, 1)) !important;
                 margin-bottom: 2px !important;
                 word-break: break-word !important;
                 line-height: 1.2 !important;
@@ -1391,30 +1395,30 @@
 
             /* 联系信息容器 - 最重要的覆盖 */
             .qr-card-left > div[style*="fontSize"] {
-                font-size: 7px !important;
+                font-size: calc(7px * var(--card-font-scale, 1)) !important;
             }
 
             .qr-card-left > div[style*="fontSize"] p {
-                font-size: 7px !important;
+                font-size: calc(7px * var(--card-font-scale, 1)) !important;
                 margin-bottom: 1px !important;
                 word-break: break-word !important;
                 line-height: 1.2 !important;
             }
 
             .qr-card-left > div[style*="fontSize"] span {
-                font-size: 7px !important;
+                font-size: calc(7px * var(--card-font-scale, 1)) !important;
                 word-break: break-word !important;
             }
 
             /* 备用通配符选择器 */
             .qr-card-left > div > p {
-                font-size: 7px !important;
+                font-size: calc(7px * var(--card-font-scale, 1)) !important;
                 margin-bottom: 1px !important;
                 word-break: break-word !important;
             }
 
             .qr-card-left > div > span {
-                font-size: 7px !important;
+                font-size: calc(7px * var(--card-font-scale, 1)) !important;
             }
 
             /* 所有文本元素启用换行 */
@@ -1442,20 +1446,20 @@
             }
 
             .qr-card-right p {
-                font-size: 7px !important;
+                font-size: calc(7px * var(--card-font-scale, 1)) !important;
                 margin: 0 !important;
                 word-break: break-word !important;
                 line-height: 1.2 !important;
             }
 
             .qr-card-left h2 {
-                font-size: 12px !important;
+                font-size: calc(12px * var(--card-font-scale, 1)) !important;
                 margin-bottom: 2px !important;
                 word-break: break-word !important;
             }
 
             .qr-card-left > p {
-                font-size: 8px !important;
+                font-size: calc(8px * var(--card-font-scale, 1)) !important;
                 margin-bottom: 1px !important;
                 overflow: hidden !important;
                 word-break: break-word !important;
@@ -1470,22 +1474,22 @@
             }
 
             .qr-card-right p {
-                font-size: 7px !important;
+                font-size: calc(7px * var(--card-font-scale, 1)) !important;
                 margin: 3px 0 0 0 !important;
                 word-break: break-word !important;
             }
 
             /* 绝对覆盖所有可能的 inline style font-size (480px) */
             .qr-card-left h2[style*="fontSize"] {
-                font-size: 12px !important;
+                font-size: calc(12px * var(--card-font-scale, 1)) !important;
             }
 
             .qr-card-left p[style*="fontSize"] {
-                font-size: 8px !important;
+                font-size: calc(8px * var(--card-font-scale, 1)) !important;
             }
 
             .qr-card-left > div[style*="fontSize"] {
-                font-size: 7px !important;
+                font-size: calc(7px * var(--card-font-scale, 1)) !important;
             }
 
             #qr-code[style*="padding"] {
@@ -1493,7 +1497,7 @@
             }
 
             .qr-card-right p[style*="fontSize"] {
-                font-size: 7px !important;
+                font-size: calc(7px * var(--card-font-scale, 1)) !important;
             }
 
             .preview-container {
@@ -4523,6 +4527,9 @@
                 return flag ? `${flag} ${raw}` : raw;
             };
 
+            const fontScale = Math.max(0.75, Math.min(2, (cardData.fontSize || 14) / 14));
+            const scaleFont = (basePx) => `${Math.max(8, Math.round(basePx * fontScale))}px`;
+
             const getFilterStyle = () => {
                 let filters = [];
                 
@@ -5222,6 +5229,7 @@ END:VCARD`;
                             key={animationKey}
                             className={`card-wrapper ${cardData.animationEffect && cardData.animationEffect !== 'none' ? `animate__animated animate__${cardData.animationEffect}` : ''}`}
                             style={{
+                                '--card-font-scale': fontScale,
                                 borderRadius: `${cardData.borderRadiusOuter}px`,
                                 filter: getFilterStyle(),
                                 boxShadow: shadowStyle,
@@ -5258,10 +5266,10 @@ END:VCARD`;
                                     </div>
                                     <div className="main-card-right">
                                         <div>
-                                            <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '3px', color: '#1a1a1a' }}>
+                                            <h2 style={{ fontSize: scaleFont(22), fontWeight: 'bold', marginBottom: '3px', color: '#1a1a1a' }}>
                                                 {cardData.name}
                                             </h2>
-                                            <p style={{ fontSize: '13px', color: '#667eea', marginBottom: '6px', fontWeight: '600' }}>
+                                            <p style={{ fontSize: scaleFont(13), color: '#667eea', marginBottom: '6px', fontWeight: '600' }}>
                                                 {cardData.title} @ {cardData.company}
                                             </p>
                                             {cardData.decorativeElements && cardData.decorativeElements.map((elemKey, idx) => {
@@ -5276,29 +5284,29 @@ END:VCARD`;
                                                     }}></div>
                                                 );
                                             })}
-                                            <p style={{ fontSize: '11px', color: '#666', marginBottom: '2px' }}>
+                                            <p style={{ fontSize: scaleFont(11), color: '#666', marginBottom: '2px' }}>
                                                 📍 {formatCountryDisplay(cardData.country)}
                                             </p>
                                             {cardData.address && (
-                                                <p style={{ fontSize: '11px', color: '#666', marginBottom: '2px' }}>
+                                                <p style={{ fontSize: scaleFont(11), color: '#666', marginBottom: '2px' }}>
                                                     🏢 {cardData.address}
                                                 </p>
                                             )}
                                             {cardData.intro && (
-                                                <p style={{ fontSize: '10px', color: '#888', marginTop: '3px', lineHeight: '1.3', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                                                <p style={{ fontSize: scaleFont(10), color: '#888', marginTop: '3px', lineHeight: '1.3', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                                                     💬 {cardData.intro}
                                                 </p>
                                             )}
                                         </div>
 
-                                        <div style={{ fontSize: '11px', color: '#666' }}>
+                                        <div style={{ fontSize: scaleFont(11), color: '#666' }}>
                                             {cardData.showEmail !== false && <p style={{ marginBottom: '1px' }}>✉️ {cardData.email}</p>}
                                             {cardData.showPhone !== false && <p style={{ marginBottom: '1px' }}>📱 {cardData.phone}</p>}
                                             {cardData.showWebsite !== false && <p style={{ marginBottom: '1px' }}>🌐 {cardData.website}</p>}
                                             {Object.entries(cardData.socialLinks || {}).filter(([_, url]) => url).length > 0 && (
                                                 <div style={{ marginTop: '4px' }}>
                                                     {Object.entries(cardData.socialLinks).filter(([_, url]) => url).map(([key, url]) => (
-                                                        <span key={key} style={{ marginRight: '5px', fontSize: '13px' }} title={SOCIAL_MEDIA[key]?.name}>{SOCIAL_MEDIA[key]?.icon}</span>
+                                                        <span key={key} style={{ marginRight: '5px', fontSize: scaleFont(13) }} title={SOCIAL_MEDIA[key]?.name}>{SOCIAL_MEDIA[key]?.icon}</span>
                                                     ))}
                                                 </div>
                                             )}

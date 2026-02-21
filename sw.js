@@ -1,9 +1,17 @@
 // Virtual Card Maker Service Worker
-const CACHE_NAME = 'virtual-card-maker-v4';
+const CACHE_NAME = 'virtual-card-maker-v5';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
-  './manifest.json',
+  './manifest.webmanifest',
+  './public/icons/icon-192.png',
+  './public/icons/icon-512.png',
+  './public/icons/maskable-192.png',
+  './public/icons/maskable-512.png',
+  './public/icons/apple-touch-icon.png',
+  './public/icons/favicon-16.png',
+  './public/icons/favicon-32.png',
+  './public/icons/favicon.ico',
   './skill.json',
   './webmcp.json',
   './webmcp-example.html',
@@ -27,7 +35,15 @@ self.addEventListener('install', (event) => {
         return cache.addAll([
           './',
           './index.html',
-          './manifest.json',
+          './manifest.webmanifest',
+          './public/icons/icon-192.png',
+          './public/icons/icon-512.png',
+          './public/icons/maskable-192.png',
+          './public/icons/maskable-512.png',
+          './public/icons/apple-touch-icon.png',
+          './public/icons/favicon-16.png',
+          './public/icons/favicon-32.png',
+          './public/icons/favicon.ico',
           './skill.json',
           './webmcp.json',
           './webmcp-example.html'
