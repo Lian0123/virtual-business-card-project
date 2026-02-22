@@ -137,6 +137,23 @@
             color: #e0e0e0;
         }
 
+        body.rtl-lang {
+            direction: rtl;
+        }
+
+        body.rtl-lang .panel-header {
+            align-items: flex-end;
+        }
+
+        body.rtl-lang .header-controls {
+            flex-direction: row-reverse;
+        }
+
+        body.rtl-lang .control-label,
+        body.rtl-lang .section-title {
+            text-align: right;
+        }
+
         #root {
             width: 100%;
             min-height: 100vh;
@@ -1695,7 +1712,7 @@
         "price": "0",
         "priceCurrency": "USD"
       },
-            "inLanguage": ["zh-TW", "zh-CN", "en-US", "ja-JP", "ko-KR", "vi-VN", "fr-FR", "de-DE", "es-ES", "pt-PT"],
+            "inLanguage": ["zh-TW", "zh-CN", "en-US", "ja-JP", "ko-KR", "vi-VN", "fr-FR", "de-DE", "es-ES", "pt-PT", "id-ID", "ru-RU", "pl-PL", "tr-TR", "ar"],
             "sameAs": [
                 "https://github.com/Lian0123/virtual-business-card-project",
                 "https://lian0123.github.io/virtual-business-card-project/webmcp-example.html"
@@ -1833,6 +1850,21 @@
             }
         };
 
+        const TEMPLATE_LABEL_KEYS = {
+            professional: 'templateProfessional',
+            modern: 'templateModern',
+            minimal: 'templateMinimal',
+            vibrant: 'templateVibrant',
+            sunset: 'templateSunset',
+            ocean: 'templateOcean',
+            forest: 'templateForest',
+            aurora: 'templateAurora',
+            midnight: 'templateMidnight',
+            peach: 'templatePeach',
+            royal: 'templateRoyal',
+            lava: 'templateLava'
+        };
+
         const LANGUAGES = {
             'zh-TW': { name: '繁體中文', flag: '🇹🇼' },
             'en-US': { name: 'English', flag: '🇺🇸' },
@@ -1843,7 +1875,12 @@
             'fr-FR': { name: 'Français', flag: '🇫🇷' },
             'de-DE': { name: 'Deutsch', flag: '🇩🇪' },
             'es-ES': { name: 'Español', flag: '🇪🇸' },
-            'pt-PT': { name: 'Português', flag: '🇵🇹' }
+            'pt-PT': { name: 'Português', flag: '🇵🇹' },
+            'id-ID': { name: 'Bahasa Indonesia', flag: '🇮🇩' },
+            'ru-RU': { name: 'Русский', flag: '🇷🇺' },
+            'pl-PL': { name: 'Polski', flag: '🇵🇱' },
+            'tr-TR': { name: 'Türkçe', flag: '🇹🇷' },
+            'ar': { name: 'العربية', flag: '🇸🇦' }
         };
 
         const TRANSLATIONS = {
@@ -1883,6 +1920,7 @@
                 showEmail: '顯示信箱',
                 showPhone: '顯示電話',
                 showSocial: '顯示社交媒體',
+                showCountryFlag: '顯示國旗',
                 ctaSettings: '行動號召',
                 ctaLabel: '按鈕文字',
                 ctaUrl: '按鈕連結',
@@ -2040,7 +2078,22 @@
                 decorativeBrackets: '括號角',
                 decorativeHexagon: '六角',
                 decorativeSparkle: '星火',
-                decorativeDottrail: '點陣'
+                decorativeDottrail: '點陣',
+                colorPresetsLabel: '色彩快速預設',
+                githubProject: 'GitHub 專案',
+                githubUser: 'GitHub 使用者',
+                templateProfessional: '專業風格',
+                templateModern: '現代風格',
+                templateMinimal: '極簡風格',
+                templateVibrant: '活力風格',
+                templateSunset: '日落風格',
+                templateOcean: '海洋風格',
+                templateForest: '森林風格',
+                templateAurora: '極光風格',
+                templateMidnight: '午夜風格',
+                templatePeach: '蜜桃風格',
+                templateRoyal: '皇家風格',
+                templateLava: '熔岩風格'
             },
             'en-US': {
                 title: 'Professional Business Card',
@@ -2078,6 +2131,7 @@
                 showEmail: 'Show Email',
                 showPhone: 'Show Phone',
                 showSocial: 'Show Social Links',
+                showCountryFlag: 'Show Country Flag',
                 ctaSettings: 'Call To Action',
                 ctaLabel: 'Button Label',
                 ctaUrl: 'Button Link',
@@ -2235,7 +2289,22 @@
                 decorativeBrackets: 'Bracket Corner',
                 decorativeHexagon: 'Hexagon',
                 decorativeSparkle: 'Sparkle',
-                decorativeDottrail: 'Dot Pattern'
+                decorativeDottrail: 'Dot Pattern',
+                colorPresetsLabel: 'Quick Color Presets',
+                githubProject: 'GitHub Project',
+                githubUser: 'GitHub User',
+                templateProfessional: 'Professional',
+                templateModern: 'Modern',
+                templateMinimal: 'Minimal',
+                templateVibrant: 'Vibrant',
+                templateSunset: 'Sunset',
+                templateOcean: 'Ocean',
+                templateForest: 'Forest',
+                templateAurora: 'Aurora',
+                templateMidnight: 'Midnight',
+                templatePeach: 'Peach',
+                templateRoyal: 'Royal',
+                templateLava: 'Lava'
             },
             'ja-JP': {
                 title: 'プロフェッショナル名刺',
@@ -2874,6 +2943,51 @@
             showCountryFlag: 'Mostrar bandeira'
         });
 
+        TRANSLATIONS['id-ID'] = buildLocale({
+            title: 'Pembuat Kartu Nama Profesional',
+            basicSettings: 'Pengaturan Dasar',
+            advancedSettings: 'Lanjutan',
+            designTemplate: 'Template Desain',
+            countryLabel: 'Negara/Wilayah',
+            showCountryFlag: 'Tampilkan bendera negara'
+        });
+
+        TRANSLATIONS['ru-RU'] = buildLocale({
+            title: 'Профессиональный Конструктор Визиток',
+            basicSettings: 'Основные настройки',
+            advancedSettings: 'Расширенные',
+            designTemplate: 'Шаблоны дизайна',
+            countryLabel: 'Страна/Регион',
+            showCountryFlag: 'Показывать флаг страны'
+        });
+
+        TRANSLATIONS['pl-PL'] = buildLocale({
+            title: 'Profesjonalny Kreator Wizytówek',
+            basicSettings: 'Ustawienia podstawowe',
+            advancedSettings: 'Zaawansowane',
+            designTemplate: 'Szablony projektu',
+            countryLabel: 'Kraj/Region',
+            showCountryFlag: 'Pokaż flagę kraju'
+        });
+
+        TRANSLATIONS['tr-TR'] = buildLocale({
+            title: 'Profesyonel Kartvizit Oluşturucu',
+            basicSettings: 'Temel Ayarlar',
+            advancedSettings: 'Gelişmiş',
+            designTemplate: 'Tasarım Şablonları',
+            countryLabel: 'Ülke/Bölge',
+            showCountryFlag: 'Ülke bayrağını göster'
+        });
+
+        TRANSLATIONS['ar'] = buildLocale({
+            title: 'منشئ بطاقات أعمال احترافي',
+            basicSettings: 'الإعدادات الأساسية',
+            advancedSettings: 'متقدم',
+            designTemplate: 'قوالب التصميم',
+            countryLabel: 'الدولة/المنطقة',
+            showCountryFlag: 'إظهار علم الدولة'
+        });
+
         const BG_PATTERNS = {
             dots: 'radial-gradient(circle, rgba(255,255,255,0.2) 2px, transparent 2px)',
             grid: 'linear-gradient(0deg, rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)',
@@ -3024,7 +3138,10 @@
                 bgPatternOpacity: 1
             });
 
-            const t = TRANSLATIONS[lang] || TRANSLATIONS['en-US'];
+            const t = {
+                ...TRANSLATIONS['en-US'],
+                ...(TRANSLATIONS[lang] || {})
+            };
 
             const applyTemplate = (templateName) => {
                 const template = CARD_TEMPLATES[templateName];
@@ -3047,6 +3164,10 @@
 
             useEffect(() => {
                 localStorage.setItem('vc_lang', lang);
+                document.documentElement.lang = lang;
+                const isRtlLang = lang === 'ar';
+                document.documentElement.dir = isRtlLang ? 'rtl' : 'ltr';
+                document.body.classList.toggle('rtl-lang', isRtlLang);
             }, [lang]);
 
             const toggleTheme = () => {
@@ -3499,6 +3620,7 @@
 
         function ControlPanel({ cardData, updateCardData, handleAvatarUpload, lang, setLang, t, theme, toggleTheme, cardType, setCardType, customImage, handleImageUpload, textStickers, addTextSticker, addImageSticker, updateSticker, removeSticker, qrContent, setQrContent, selectedTemplate, applyTemplate, addCustomDecoration, updateCustomDecoration, removeCustomDecoration }) {
             const [activeTab, setActiveTab] = useState('basic');
+            const getTemplateName = (key, fallbackName) => t[TEMPLATE_LABEL_KEYS[key]] || fallbackName;
 
             return (
                 <div className="control-panel">
@@ -3517,10 +3639,10 @@
                                     <option key={code} value={code}>{flag} {name}</option>
                                 ))}
                             </select>
-                            <a href="https://github.com/Lian0123/virtual-business-card-project" target="_blank" rel="noopener noreferrer" className="github-link" title="GitHub Project">
+                            <a href="https://github.com/Lian0123/virtual-business-card-project" target="_blank" rel="noopener noreferrer" className="github-link" title={t.githubProject}>
                                 🐙
                             </a>
-                            <a href="https://github.com/Lian0123" target="_blank" rel="noopener noreferrer" className="github-link" title="GitHub User">
+                            <a href="https://github.com/Lian0123" target="_blank" rel="noopener noreferrer" className="github-link" title={t.githubUser}>
                                 👤
                             </a>
                         </div>
@@ -3849,14 +3971,14 @@
                                                 key={key}
                                                 className={`preset-btn ${selectedTemplate === key ? 'active' : ''}`}
                                                 onClick={() => applyTemplate(key)}
-                                                title={template.name}
+                                                title={getTemplateName(key, template.name)}
                                                 style={{
                                                     background: template.bgImage,
                                                     backgroundSize: 'cover',
                                                     backgroundPosition: 'center'
                                                 }}
                                             >
-                                                {template.name.charAt(0)}
+                                                {getTemplateName(key, template.name).charAt(0)}
                                             </button>
                                         ))}
                                     </div>
@@ -3886,14 +4008,14 @@
                                     </div>
                                     <div style={{ marginTop: '8px', padding: '8px', borderRadius: '4px', background: `linear-gradient(135deg, ${cardData.bgGradientColor1 || '#667eea'} 0%, ${cardData.bgGradientColor2 || '#764ba2'} 100%)`, height: '40px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}></div>
                                     <div style={{ marginTop: '10px' }}>
-                                        <label className="control-label">{t.colorPresetsLabel || '色彩快速預設'}</label>
+                                        <label className="control-label">{t.colorPresetsLabel}</label>
                                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
                                             {Object.entries(CARD_TEMPLATES).map(([key, template]) => (
                                                 <button
                                                     key={`color-${key}`}
                                                     type="button"
                                                     className="preset-btn"
-                                                    title={template.name}
+                                                    title={getTemplateName(key, template.name)}
                                                     style={{ background: template.bgImage, borderColor: 'rgba(255,255,255,0.2)' }}
                                                     onClick={() => {
                                                         updateCardData('bgGradientColor1', template.colors.primary);

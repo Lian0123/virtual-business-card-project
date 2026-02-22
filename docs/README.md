@@ -4,6 +4,22 @@
 
 本文檔集提供了全面的應用程式指南和技術文檔。
 
+### README 多語言入口
+- [繁體中文](../README.md)
+- [English](../README.en.md)
+- [日本語](../README.ja.md)
+- [한국어](../README.ko.md)
+- [Français](../README.fr.md)
+- [ไทย](../README.th.md)
+- [Español](../README.es.md)
+- [Português](../README.pt.md)
+- [Deutsch](../README.de.md)
+- [Bahasa Indonesia](../README.id.md)
+- [Русский](../README.ru.md)
+- [Polski](../README.pl.md)
+- [Türkçe](../README.tr.md)
+- [العربية](../README.ar.md)
+
 ### 用戶文檔
 - [快速開始指南](./QUICKSTART.md) - 5分鐘快速上手
 - [功能詳細說明](./FEATURES.md) - 完整功能介紹

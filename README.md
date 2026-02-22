@@ -2,6 +2,22 @@
 
 可在瀏覽器中建立、編輯、預覽與匯出專業數位名片，支援 PWA、WebMCP（JSON-RPC）遠端操作，以及多種匯出格式（PNG/JPG/WebP/HTML/VCF）。
 
+## Languages
+- 繁體中文（目前頁）
+- English: [README.en.md](README.en.md)
+- 日本語: [README.ja.md](README.ja.md)
+- 한국어: [README.ko.md](README.ko.md)
+- Français: [README.fr.md](README.fr.md)
+- ไทย: [README.th.md](README.th.md)
+- Español: [README.es.md](README.es.md)
+- Português: [README.pt.md](README.pt.md)
+- Deutsch: [README.de.md](README.de.md)
+- Bahasa Indonesia: [README.id.md](README.id.md)
+- Русский: [README.ru.md](README.ru.md)
+- Polski: [README.pl.md](README.pl.md)
+- Türkçe: [README.tr.md](README.tr.md)
+- العربية: [README.ar.md](README.ar.md)
+
 ## Demo
 - 主站: https://lian0123.github.io/virtual-business-card-project/
 - WebMCP 範例頁: https://lian0123.github.io/virtual-business-card-project/webmcp-example.html
