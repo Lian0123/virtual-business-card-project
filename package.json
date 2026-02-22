@@ -13,10 +13,16 @@
     "playwright": "^1.58.2"
   },
   "keywords": [
-    "business card",
-    "card maker",
-    "react",
-    "web app"
+    "virtual business card",
+    "digital business card",
+    "business card maker",
+    "webmcp",
+    "mcp",
+    "json-rpc",
+    "openapi",
+    "pwa",
+    "vcard",
+    "ai automation"
   ],
   "author": "",
   "license": "MIT"

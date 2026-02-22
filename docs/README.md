@@ -14,7 +14,12 @@
 - [安裝和運行](./INSTALLATION.md) - 開發環境設置
 - [代碼結構](./ARCHITECTURE.md) - 應用程式架構
 - [API參考](./API.md) - 函數和組件說明
+- [WebMCP 整合指南](./WEBMCP_GUIDE.md) - AI 遠端控制與 JSON-RPC 調用
 - [貢獻指南](./CONTRIBUTING.md) - 代碼貢獻流程
+
+### AI / API 規格
+- [WebMCP 能力描述（JSON）](../webmcp.json) - 工具清單與傳輸資訊
+- [WebMCP OpenAPI 3.1](../webmcp.openapi.yaml) - 外部平台整合用 API 規格
 
 ### 改進和版本記錄
 - [V6 改進文檔](./IMPROVEMENTS_V6.md) - 最新版本改進

@@ -1,5 +1,5 @@
 // Virtual Card Maker Service Worker
-const CACHE_NAME = 'virtual-card-maker-v5';
+const CACHE_NAME = 'virtual-card-maker-v6';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -14,6 +14,7 @@ const ASSETS_TO_CACHE = [
   './public/icons/favicon.ico',
   './skill.json',
   './webmcp.json',
+  './webmcp.openapi.yaml',
   './webmcp-example.html',
   'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css',
   'https://unpkg.com/react@18/umd/react.production.min.js',
@@ -46,6 +47,7 @@ self.addEventListener('install', (event) => {
           './public/icons/favicon.ico',
           './skill.json',
           './webmcp.json',
+          './webmcp.openapi.yaml',
           './webmcp-example.html'
         ]).catch(err => console.log('[Service Worker] Cache add error:', err));
       })

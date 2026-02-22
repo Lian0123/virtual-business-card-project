@@ -42,5 +42,9 @@
   "integration": {
     "compatiblePlatforms": ["ChatGPT", "Google Assistant", "Custom Agents"],
     "notes": "Use JSON-RPC over postMessage or HTTP endpoint."
+  },
+  "docs": {
+    "openapiSpecUrl": "./webmcp.openapi.yaml",
+    "guideUrl": "./docs/WEBMCP_GUIDE.md"
   }
 }

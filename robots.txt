@@ -4,7 +4,6 @@
 User-agent: *
 Allow: /
 Disallow: /temp/
-Disallow: /*.json$
 Disallow: /*?*
 
 # Specific directives for major search engines
@@ -21,4 +20,4 @@ Allow: /
 Crawl-delay: 1
 
 # Sitemap location
-Sitemap: https://lian0123.github.io/virtual-card-project/sitemap.xml
+Sitemap: https://lian0123.github.io/virtual-business-card-project/sitemap.xml

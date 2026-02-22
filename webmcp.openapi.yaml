@@ -1,0 +1,258 @@
+openapi: 3.1.0
+info:
+  title: Virtual Business Card WebMCP API
+  version: 0.2.0
+  summary: JSON-RPC over HTTP endpoint for controlling the Virtual Business Card web app.
+  description: |
+    This OpenAPI document describes the HTTP bridge endpoint used by WebMCP.
+    The endpoint accepts JSON-RPC 2.0 payloads and supports `tools/list` and `tools/call`.
+
+    Tool execution examples:
+    - `card.updateField` to update a single field
+    - `card.updateFields` to patch multiple fields
+    - `card.setBackgroundImage` to change card background image
+    - `card.updateLayout` to adjust layout settings
+    - `card.export` to export png/jpg/webp/html/vcf
+
+    Authentication is currently not required (`authType: none`).
+    For production usage, add gateway-level controls such as rate limiting, request signing, and audit logs.
+  contact:
+    name: Virtual Business Card Project
+    url: https://github.com/Lian0123/virtual-business-card-project
+  license:
+    name: MIT
+servers:
+  - url: https://lian0123.github.io/virtual-business-card-project
+    description: GitHub Pages production
+  - url: http://localhost:8000
+    description: Local development server
+externalDocs:
+  description: WebMCP integration guide
+  url: https://github.com/Lian0123/virtual-business-card-project/blob/main/docs/WEBMCP_GUIDE.md
+tags:
+  - name: WebMCP
+    description: Remote control APIs for card editing and export
+paths:
+  /api/webmcp:
+    post:
+      tags: [WebMCP]
+      operationId: postWebMcpJsonRpc
+      summary: Invoke WebMCP JSON-RPC method
+      description: |
+        Accepts JSON-RPC requests. Supported methods:
+        - `tools/list`
+        - `tools/call`
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/ToolsListRequest'
+                - $ref: '#/components/schemas/ToolsCallRequest'
+            examples:
+              listTools:
+                summary: tools/list
+                value:
+                  jsonrpc: "2.0"
+                  id: 1
+                  method: tools/list
+                  params: {}
+              updateName:
+                summary: tools/call -> card.updateField
+                value:
+                  jsonrpc: "2.0"
+                  id: 2
+                  method: tools/call
+                  params:
+                    name: card.updateField
+                    arguments:
+                      field: name
+                      value: Alex Chen
+              exportPng:
+                summary: tools/call -> card.export
+                value:
+                  jsonrpc: "2.0"
+                  id: 3
+                  method: tools/call
+                  params:
+                    name: card.export
+                    arguments:
+                      format: png
+      responses:
+        '200':
+          description: JSON-RPC success or error payload
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ToolsListResponse'
+                  - $ref: '#/components/schemas/ToolsCallResponse'
+                  - $ref: '#/components/schemas/JsonRpcErrorResponse'
+              examples:
+                listToolsResult:
+                  value:
+                    jsonrpc: "2.0"
+                    id: 1
+                    result:
+                      tools:
+                        - name: card.getState
+                        - name: card.updateField
+                          description: Update a card field
+                          inputSchema:
+                            field: string
+                            value: any
+                callResult:
+                  value:
+                    jsonrpc: "2.0"
+                    id: 2
+                    result:
+                      content:
+                        - type: json
+                          data:
+                            ok: true
+                errorResult:
+                  value:
+                    jsonrpc: "2.0"
+                    id: 99
+                    error:
+                      code: -32000
+                      message: Unsupported WebMCP method
+components:
+  schemas:
+    JsonRpcBase:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          const: "2.0"
+        id:
+          oneOf:
+            - type: integer
+            - type: string
+            - type: number
+
+    ToolsListRequest:
+      allOf:
+        - $ref: '#/components/schemas/JsonRpcBase'
+        - type: object
+          required: [method, params]
+          properties:
+            method:
+              type: string
+              const: tools/list
+            params:
+              type: object
+              additionalProperties: true
+
+    ToolsCallRequest:
+      allOf:
+        - $ref: '#/components/schemas/JsonRpcBase'
+        - type: object
+          required: [method, params]
+          properties:
+            method:
+              type: string
+              const: tools/call
+            params:
+              $ref: '#/components/schemas/ToolsCallParams'
+
+    ToolsCallParams:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          enum:
+            - card.getState
+            - card.setType
+            - card.setLanguage
+            - card.setTheme
+            - card.updateField
+            - card.updateFields
+            - card.updateLayout
+            - card.setQrContent
+            - card.applyTemplate
+            - card.setBackgroundImage
+            - card.export
+            - card.simulateAction
+            - card.setState
+        arguments:
+          type: object
+          description: Tool input payload (shape depends on `name`)
+          additionalProperties: true
+
+    ToolDescriptor:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        inputSchema:
+          type: object
+          additionalProperties: true
+
+    ToolsListResponse:
+      allOf:
+        - $ref: '#/components/schemas/JsonRpcBase'
+        - type: object
+          required: [result]
+          properties:
+            result:
+              type: object
+              required: [tools]
+              properties:
+                tools:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ToolDescriptor'
+
+    ToolCallContentItem:
+      type: object
+      required: [type, data]
+      properties:
+        type:
+          type: string
+          const: json
+        data:
+          type: object
+          additionalProperties: true
+
+    ToolsCallResponse:
+      allOf:
+        - $ref: '#/components/schemas/JsonRpcBase'
+        - type: object
+          required: [result]
+          properties:
+            result:
+              type: object
+              required: [content]
+              properties:
+                content:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ToolCallContentItem'
+
+    JsonRpcError:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+
+    JsonRpcErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/JsonRpcBase'
+        - type: object
+          required: [error]
+          properties:
+            error:
+              $ref: '#/components/schemas/JsonRpcError'
