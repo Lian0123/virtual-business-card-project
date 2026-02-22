@@ -2,3 +2,5 @@ theme: jekyll-theme-minimal
 title: 個人化名片製作網頁
 description: 一個功能完整的個人化名片製作工具
 show_downloads: false
+sitemap:
+  path: sitemap.xml
