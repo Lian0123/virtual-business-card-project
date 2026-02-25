@@ -43,7 +43,7 @@ async function run() {
   try {
     await page.goto(`${BASE_URL}/index.html`, { waitUntil: 'networkidle' });
 
-    await page.waitForFunction(() => window.WebMCP && navigator.serviceWorker, null, { timeout: 10000 });
+    await page.waitForFunction(() => window.WebMCP && navigator.modelContext, null, { timeout: 10000 });
 
     try {
       await page.waitForFunction(() => navigator.serviceWorker.controller !== null, null, { timeout: 5000 });
@@ -67,6 +67,14 @@ async function run() {
     const listRes = await rpc(1, 'tools/list', {});
     if (listRes.status !== 200 || listRes.body.error) {
       throw new Error(`tools/list 失敗: ${JSON.stringify(listRes.body)}`);
+    }
+
+    const modelContextList = await page.evaluate(async () => {
+      const tools = await navigator.modelContext.listTools();
+      return Array.isArray(tools) ? tools.length : -1;
+    });
+    if (modelContextList <= 0) {
+      throw new Error('navigator.modelContext.listTools 失敗');
     }
 
     const updateRes = await rpc(2, 'tools/call', {

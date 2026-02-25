@@ -3420,6 +3420,16 @@
                     listTools: () => webMcpTools,
                     callTool: (name, input) => callWebMcpTool(name, input)
                 };
+                if (typeof navigator !== 'undefined' && !navigator.modelContext) {
+                    try {
+                        Object.defineProperty(navigator, 'modelContext', {
+                            configurable: true,
+                            value: window.WebMCP
+                        });
+                    } catch (_) {
+                        navigator.modelContext = window.WebMCP;
+                    }
+                }
 
                 const onSkillMessage = async (event) => {
                     const payload = event.data;
