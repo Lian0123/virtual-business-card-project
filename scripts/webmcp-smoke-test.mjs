@@ -43,7 +43,7 @@ async function run() {
   try {
     await page.goto(`${BASE_URL}/index.html`, { waitUntil: 'networkidle' });
 
-    await page.waitForFunction(() => window.WebMCP && navigator.modelContext, null, { timeout: 10000 });
+    await page.waitForFunction(() => window.WebMCP && navigator.modelContext && window.VirtualCardWebMCP, null, { timeout: 10000 });
 
     try {
       await page.waitForFunction(() => navigator.serviceWorker.controller !== null, null, { timeout: 5000 });
@@ -77,6 +77,35 @@ async function run() {
       throw new Error('navigator.modelContext.listTools 失敗');
     }
 
+    // ── Chromium modelContext: verify registerTool / callTool ──
+    const chromiumToolCount = await page.evaluate(() => {
+      return window.VirtualCardWebMCP ? window.VirtualCardWebMCP.tools.length : -1;
+    });
+    if (chromiumToolCount <= 0) {
+      throw new Error('VirtualCardWebMCP.tools 清單為空');
+    }
+
+    const chromiumCallResult = await page.evaluate(async () => {
+      return await navigator.modelContext.callTool('card.getState', {});
+    });
+    if (!chromiumCallResult || typeof chromiumCallResult !== 'object') {
+      throw new Error('navigator.modelContext.callTool(card.getState) 失敗');
+    }
+
+    // Verify tool schema structure (Chromium-spec fields)
+    const toolSchemaCheck = await page.evaluate(() => {
+      const tools = navigator.modelContext.listTools();
+      const sample = tools.find(t => t.name === 'card.updateField');
+      if (!sample) return 'tool not found';
+      if (!sample.inputSchema) return 'missing inputSchema';
+      if (!sample.outputSchema) return 'missing outputSchema';
+      if (!sample.annotations) return 'missing annotations';
+      return 'ok';
+    });
+    if (toolSchemaCheck !== 'ok') {
+      throw new Error(`Chromium tool schema 驗證失敗: ${toolSchemaCheck}`);
+    }
+
     const updateRes = await rpc(2, 'tools/call', {
       name: 'card.updateField',
       arguments: { field: 'name', value: 'Smoke Test User' }
@@ -94,9 +123,13 @@ async function run() {
     }
 
     console.log('✅ WebMCP smoke test passed');
-    console.log('- tools/list: OK');
-    console.log('- card.updateField: OK');
-    console.log('- card.export: OK');
+    console.log('- tools/list (HTTP): OK');
+    console.log('- navigator.modelContext.listTools: OK (' + modelContextList + ' tools)');
+    console.log('- VirtualCardWebMCP.tools: OK (' + chromiumToolCount + ' tools)');
+    console.log('- navigator.modelContext.callTool(card.getState): OK');
+    console.log('- Chromium tool schema (inputSchema/outputSchema/annotations): OK');
+    console.log('- card.updateField (HTTP): OK');
+    console.log('- card.export (HTTP): OK');
   } finally {
     await browser.close();
     stopServer(serverPid);

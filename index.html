@@ -42,6 +42,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="./src/webmcp-chromium.js"></script>
     <style>
         * {
             margin: 0;
@@ -3420,15 +3421,109 @@
                     listTools: () => webMcpTools,
                     callTool: (name, input) => callWebMcpTool(name, input)
                 };
-                if (typeof navigator !== 'undefined' && !navigator.modelContext) {
-                    try {
-                        Object.defineProperty(navigator, 'modelContext', {
-                            configurable: true,
-                            value: window.WebMCP
-                        });
-                    } catch (_) {
-                        navigator.modelContext = window.WebMCP;
+
+                // ─── Chromium-based WebMCP: listen for tool events ───────────
+                // The webmcp-chromium.js module dispatches CustomEvents;
+                // here we handle them by invoking the React-bound `api` methods
+                // and firing a completion event back with the result.
+                const fireCompletion = (requestId, data) => {
+                    window.dispatchEvent(new CustomEvent('tool-completion-' + requestId, {
+                        detail: { data }
+                    }));
+                };
+
+                const chromiumToolHandlers = {
+                    'webmcp-tool-getState': (detail) => {
+                        return api.getState();
+                    },
+                    'webmcp-tool-setType': (detail) => {
+                        api.setCardType(detail.cardType);
+                        return { ok: true };
+                    },
+                    'webmcp-tool-setLanguage': (detail) => {
+                        api.setLanguage(detail.lang);
+                        return { ok: true };
+                    },
+                    'webmcp-tool-setTheme': (detail) => {
+                        api.setThemeMode(detail.theme);
+                        return { ok: true };
+                    },
+                    'webmcp-tool-updateField': (detail) => {
+                        api.updateField(detail.field, detail.value);
+                        return { ok: true };
+                    },
+                    'webmcp-tool-updateFields': (detail) => {
+                        api.updateFields(detail.updates || {});
+                        return { ok: true };
+                    },
+                    'webmcp-tool-updateLayout': (detail) => {
+                        api.updateLayout(detail.updates || {});
+                        return { ok: true };
+                    },
+                    'webmcp-tool-setQrContent': (detail) => {
+                        api.setQrContent(detail.value || '');
+                        return { ok: true };
+                    },
+                    'webmcp-tool-applyTemplate': (detail) => {
+                        api.applyTemplate(detail.templateName);
+                        return { ok: true };
+                    },
+                    'webmcp-tool-setBackgroundImage': (detail) => {
+                        api.setBackgroundImage(detail.imageUrl || '');
+                        return { ok: true };
+                    },
+                    'webmcp-tool-export': (detail) => {
+                        const format = detail.format || 'png';
+                        api.dispatchPreviewAction('export', { format });
+                        return { ok: true, format };
+                    },
+                    'webmcp-tool-simulateAction': (detail) => {
+                        if (detail.action === 'click') {
+                            const clickTargetMap = {
+                                'export.png': { action: 'export', format: 'png' },
+                                'export.jpg': { action: 'export', format: 'jpg' },
+                                'export.webp': { action: 'export', format: 'webp' },
+                                'export.html': { action: 'export', format: 'html' },
+                                'export.vcf': { action: 'export', format: 'vcf' },
+                                'animation.replay': { action: 'animation.replay' },
+                                'animation.toggle': { action: 'animation.toggle' }
+                            };
+                            const mapped = clickTargetMap[detail.target];
+                            if (!mapped) throw new Error('Unsupported click target: ' + detail.target);
+                            api.dispatchPreviewAction(mapped.action, mapped);
+                            return { ok: true, simulated: 'click', target: detail.target };
+                        }
+                        if (detail.action === 'input') {
+                            api.updateField(detail.target, detail.value);
+                            return { ok: true, simulated: 'input', target: detail.target };
+                        }
+                        throw new Error('Unsupported simulate action: ' + detail.action);
+                    },
+                    'webmcp-tool-setState': (detail) => {
+                        api.setState(detail.statePatch || {});
+                        return { ok: true };
                     }
+                };
+
+                const chromiumListeners = [];
+                Object.keys(chromiumToolHandlers).forEach(eventName => {
+                    const handler = (evt) => {
+                        const detail = evt.detail || {};
+                        const requestId = detail.requestId;
+                        try {
+                            const result = chromiumToolHandlers[eventName](detail);
+                            if (requestId) fireCompletion(requestId, result);
+                        } catch (err) {
+                            if (requestId) fireCompletion(requestId, { error: err.message });
+                        }
+                    };
+                    window.addEventListener(eventName, handler);
+                    chromiumListeners.push({ eventName, handler });
+                });
+
+                // Register tools with navigator.modelContext (Chromium native or polyfill)
+                if (window.VirtualCardWebMCP) {
+                    window.VirtualCardWebMCP.registerAll();
                 }
 
                 const onSkillMessage = async (event) => {
@@ -3567,6 +3662,10 @@
                     window.removeEventListener('message', onSkillMessage);
                     window.removeEventListener('message', onWebMcpMessage);
                     navigator.serviceWorker?.removeEventListener('message', onServiceWorkerMessage);
+                    // Cleanup Chromium tool event listeners
+                    chromiumListeners.forEach(({ eventName, handler }) => {
+                        window.removeEventListener(eventName, handler);
+                    });
                     if (window.VirtualCardSkill === api) {
                         delete window.VirtualCardSkill;
                     }

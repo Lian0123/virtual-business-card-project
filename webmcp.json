@@ -1,17 +1,32 @@
 {
   "name": "virtual-card-webmcp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "protocol": "webmcp-jsonrpc",
-  "transport": {
-    "type": "postMessage+http",
-    "requestType": "WEB_MCP_REQUEST",
-    "responseType": "WEB_MCP_RESPONSE",
-    "jsonrpc": "2.0",
-    "httpEndpoint": "./api/webmcp",
-    "httpMethod": "POST"
-  },
+  "transport": [
+    {
+      "type": "chromium-modelContext",
+      "description": "Chromium-native navigator.modelContext API (registerTool / unregisterTool)",
+      "api": "navigator.modelContext.registerTool(toolDef)",
+      "polyfill": "./src/webmcp-chromium.js",
+      "notes": "Preferred transport when running inside a Chromium-based browser with WebMCP support."
+    },
+    {
+      "type": "postMessage",
+      "requestType": "WEB_MCP_REQUEST",
+      "responseType": "WEB_MCP_RESPONSE",
+      "jsonrpc": "2.0",
+      "notes": "Cross-window postMessage transport for same-origin communication."
+    },
+    {
+      "type": "http",
+      "httpEndpoint": "./api/webmcp",
+      "httpMethod": "POST",
+      "jsonrpc": "2.0",
+      "notes": "HTTP bridge via Service Worker for external / cross-process callers."
+    }
+  ],
   "runtime": "browser",
-  "entry": "window.WebMCP",
+  "entry": "window.VirtualCardWebMCP || window.WebMCP",
   "security": {
     "authType": "none",
     "notes": "No auth validation required"

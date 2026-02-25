@@ -12,12 +12,19 @@ WebMCP 支援以下遠端操作：
 - 讀取或批次套用狀態（`card.getState` / `card.setState`）
 
 ## 2. 架構與傳輸
-### 2.1 postMessage（同頁/同瀏覽器上下文）
+### 2.1 Chromium-native `navigator.modelContext`（首選）
+- API: `navigator.modelContext.registerTool(toolDef)` / `unregisterTool(name)`
+- 每個工具定義包含 `name`, `description`, `inputSchema`, `outputSchema`, `execute`, `annotations`
+- 當 Chromium 瀏覽器原生支援 `navigator.modelContext` 時自動使用
+- 不支援時由 `src/webmcp-chromium.js` 提供 polyfill，同時保持 `listTools()`/`callTool()` 向後兼容
+- 參考: [GoogleChromeLabs/webmcp-tools](https://github.com/GoogleChromeLabs/webmcp-tools)
+
+### 2.2 postMessage（同頁/同瀏覽器上下文）
 - Request type: `WEB_MCP_REQUEST`
 - Response type: `WEB_MCP_RESPONSE`
 - Methods: `tools/list`, `tools/call`
 
-### 2.2 HTTP（跨程序或外部工具）
+### 2.3 HTTP（跨程序或外部工具）
 - Endpoint: `POST /api/webmcp`
 - Protocol: JSON-RPC 2.0
 - Service Worker 會把請求橋接到開啟中的主頁執行
@@ -28,6 +35,7 @@ WebMCP 支援以下遠端操作：
 - 能力描述: [../webmcp.json](../webmcp.json)
 - OpenAPI 3.1: [../webmcp.openapi.yaml](../webmcp.openapi.yaml)
 - 範例頁: [../webmcp-example.html](../webmcp-example.html)
+- Chromium 模組: [../src/webmcp-chromium.js](../src/webmcp-chromium.js)
 
 ## 4. JSON-RPC 呼叫格式
 ### 4.1 列出可用工具
@@ -127,6 +135,43 @@ function webmcpPostMessage(method, params = {}, id = Date.now()) {
 curl -X POST "http://localhost:8000/api/webmcp" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
+```
+
+### 6.4 Chromium modelContext（AI Agent / 瀏覽器擴充功能）
+```js
+// 在支援 WebMCP 的 Chromium 瀏覽器中，工具會自動註冊到 navigator.modelContext
+// AI Agent 可直接呼叫已註冊的工具：
+
+// 透過 navigator.modelContext.callTool（polyfill 提供的向後兼容方法）
+const state = await navigator.modelContext.callTool('card.getState', {});
+console.log(state); // { cardType, lang, theme, cardData, ... }
+
+// 更新名片資料
+await navigator.modelContext.callTool('card.updateField', {
+  field: 'name',
+  value: 'Alex Chen'
+});
+
+// 匯出名片
+await navigator.modelContext.callTool('card.export', { format: 'png' });
+
+// 列出所有可用工具（polyfill）
+const tools = navigator.modelContext.listTools();
+tools.forEach(t => console.log(t.name, '-', t.description));
+```
+
+### 6.5 直接使用 VirtualCardWebMCP
+```js
+// 工具清單
+console.log(window.VirtualCardWebMCP.tools.map(t => t.name));
+
+// 手動註冊/反註冊
+window.VirtualCardWebMCP.registerAll();
+window.VirtualCardWebMCP.unregisterAll();
+
+// 每個工具都有 execute 方法
+const getStateTool = window.VirtualCardWebMCP.tools.find(t => t.name === 'card.getState');
+const result = await getStateTool.execute({});
 ```
 
 ## 7. 常見操作對照
